@@ -1,0 +1,13 @@
+.server {
+    padding: 30px;
+    background: lightblue;
+    width: 500px;
+    height: 250px;
+}
+
+.client {
+    padding: 30px;
+    margin-top: 10px;
+    background: indianred;
+    color: white;
+}
