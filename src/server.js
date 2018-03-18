@@ -37,6 +37,4 @@ app.get('/*', async (req, res) => {
     res.send(renderToHTML(Element, initialProps));
 });
 
-app.listen(3000, () => {
-    console.log('Server started');
-});
+export default app;

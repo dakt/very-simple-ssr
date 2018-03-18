@@ -1,3 +1,4 @@
+const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const client = {
@@ -5,6 +6,7 @@ const client = {
     target: 'web',
     entry: ['babel-polyfill', './src/index.js'],
     output: {
+        path: path.resolve(__dirname, 'dist'),
         filename: 'bundle.js'
     },
     module: {
@@ -32,9 +34,11 @@ const client = {
 const server = {
     mode: 'development',
     target: 'node',
-    entry: ['babel-polyfill', './src/server.js'],
+    entry: ['./src/server.js'],
     output: {
-        filename: 'server.js'
+        path: path.resolve(__dirname, 'dist'),
+        filename: 'server.js',
+        libraryTarget: 'commonjs2',
     },
     module: {
         rules: [

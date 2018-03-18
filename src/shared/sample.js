@@ -34,7 +34,7 @@ export default class extends React.Component {
                     this.state.renderClient && (
                         <div className="client">
                             <h1>Client</h1>
-                            Hello from client
+                            Hello from Client
                         </div>
                     )
                 }
