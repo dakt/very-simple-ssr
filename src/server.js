@@ -1,11 +1,14 @@
+import 'isomorphic-fetch';
 import express from 'express';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { matchPath, MemoryRouter as Router } from 'react-router';
+import { Provider } from 'react-redux';
 
 import App from './shared/App';
 import routes from './shared/routes';
 import NotFound from './shared/404';
+import { configureStore } from './shared/redux';
 
 
 function renderToHTML(Element, initialProps) { 
@@ -15,6 +18,7 @@ function renderToHTML(Element, initialProps) {
 <html>
     <head>
         <title>SSR</title>
+        <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
         <script defer type="text/javascript" src="bundle.js"></script>
         <link rel="stylesheet" href="styles.css">
     </head>
@@ -35,6 +39,8 @@ app.use(express.static('dist'));
 app.get('/*', async (req, res) => {
     console.log(req.method, req.url);
 
+    const store = configureStore();
+
     let match = routes.reduce((acc, route) => {
         const found = matchPath(req.url, route);
         return found ? route : acc;
@@ -42,15 +48,20 @@ app.get('/*', async (req, res) => {
 
     match === null && (match = { component: NotFound });
 
+    match.component.getInitialData && 
+        await match.component.getInitialData({ req, dispatch: store.dispatch });
+
     const Component = (
-        <Router>
-            <App>
-                {<match.component />}
-            </App>
-        </Router>
+        <Provider store={store}>
+            <Router>
+                <App>
+                    {<match.component />}
+                </App>
+            </Router>
+        </Provider>
     );
 
-    const intialState = {};
+    const intialState = store.getState();
 
     res.send(renderToHTML(Component, intialState));
 });
