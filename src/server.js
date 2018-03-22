@@ -1,7 +1,11 @@
 import express from 'express';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import Sample from './shared/sample';
+import { matchPath, MemoryRouter as Router } from 'react-router';
+
+import App from './shared/App';
+import routes from './shared/routes';
+import NotFound from './shared/404';
 
 
 function renderToHTML(Element, initialProps) { 
@@ -29,12 +33,27 @@ const app = express();
 app.use(express.static('dist'));
 
 app.get('/*', async (req, res) => {
+    console.log(req.method, req.url);
 
-    const initialProps = await Sample.getInitialProps({ req });
+    let match = routes.reduce((acc, route) => {
+        const found = matchPath(req.url, route);
 
-    const Element = <Sample {...initialProps} />;
+        return found ? route : acc;
+    }, null);
 
-    res.send(renderToHTML(Element, initialProps));
+    match === null && (match = { component: NotFound });
+
+    const Component = (
+        <Router>
+            <App>
+                {<match.component />}
+            </App>
+        </Router>
+    );
+
+    const intialState = {};
+
+    res.send(renderToHTML(Component, intialState));
 });
 
 export default app;
