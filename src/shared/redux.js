@@ -1,4 +1,5 @@
-import { createStore } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
+import { type } from 'os';
 
 function rootReducer(state = {
     loading: false,
@@ -17,7 +18,27 @@ function rootReducer(state = {
     }
 }
 
+
+function isClient() {
+    return typeof window !== "undefined"
+}
+
+
 export function configureStore() {
-    const store = createStore(rootReducer);
+
+    const composeEnhancers = isClient() ? (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose) : compose;
+
+    const middlewares = [];
+
+    const initialState = isClient() ? window.__INITIAL_STATE__ : {};
+
+    const store = createStore(
+        rootReducer,
+        initialState,
+        composeEnhancers(
+            applyMiddleware(...middlewares)
+        )
+    );
+    
     return store;
 }
