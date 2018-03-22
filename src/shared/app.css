@@ -1,0 +1,22 @@
+.app {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    padding: 10px;
+}
+
+.appNavigationBar {
+    background: steelblue;
+    padding: 10px;
+}
+
+.appNavigationBar a {
+    display: inline-block;
+    margin-right: 10px;
+    color: white;
+    text-decoration: none;
+}
+
+.appBody {
+    padding: 10px;
+    background: lightgray;
+    min-height: 500px;
+}

@@ -7,6 +7,6 @@ export default class extends React.Component {
             <div>
                 <h1>Home</h1>
             </div>
-        )
+        );
     }
 }

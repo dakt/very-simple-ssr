@@ -37,7 +37,6 @@ app.get('/*', async (req, res) => {
 
     let match = routes.reduce((acc, route) => {
         const found = matchPath(req.url, route);
-
         return found ? route : acc;
     }, null);
 
