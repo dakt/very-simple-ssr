@@ -20,3 +20,13 @@
     background: lightgray;
     min-height: 500px;
 }
+
+.table td {
+    padding: 10px 30px;
+}
+
+.table img {
+    height: 50px;
+    width: 50px;
+    border-radius: 15px;
+}

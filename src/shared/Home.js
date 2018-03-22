@@ -1,4 +1,31 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
+
+class GistList extends React.Component {
+    render() {
+        return (
+            <table className="table">
+                <tbody>
+                    {this.props.data.map(d => (
+                        <tr key={d.id}>
+                            <td><img src={d.owner.avatar_url} /></td>
+                            <td>{d.owner.login}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        );
+    }
+}
+
+
+const mapStateToProps = (state) => ({
+    loading: state.loading,
+    data: state.data,
+});
+
+const ConnectedGistList = connect(mapStateToProps)(GistList);
 
 
 export default class extends React.Component {
@@ -17,6 +44,7 @@ export default class extends React.Component {
         return (
             <div>
                 <h1>Home</h1>
+                <ConnectedGistList />
             </div>
         );
     }

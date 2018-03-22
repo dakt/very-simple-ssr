@@ -20,7 +20,7 @@ function rootReducer(state = {
 
 
 function isClient() {
-    return typeof window !== "undefined"
+    return typeof window !== "undefined" && window.document;
 }
 
 
@@ -39,6 +39,6 @@ export function configureStore() {
             applyMiddleware(...middlewares)
         )
     );
-    
+
     return store;
 }
