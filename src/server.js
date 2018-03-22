@@ -25,7 +25,7 @@ function renderToHTML(Element, initialProps) {
     <body>
         <div id="root">${html}</div>
         <script type="text/javascript">
-            window.__INITIAL_PROPS__ = JSON.parse('${JSON.stringify(initialProps)}');
+            window.__INITIAL_STATE__ = ${JSON.stringify(initialProps).replace(/</g, '\\u003c')};
         </script>
     </body>
 </html>
