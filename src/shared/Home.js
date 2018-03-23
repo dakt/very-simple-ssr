@@ -34,8 +34,8 @@ export class GistList extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-    loading: state.loading,
-    data: state.data,
+    loading: state.gist.loading,
+    data: state.gist.data,
 });
 
 export default connect(mapStateToProps)(GistList);

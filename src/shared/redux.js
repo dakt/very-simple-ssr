@@ -1,7 +1,7 @@
-import { createStore, applyMiddleware, compose } from 'redux';
-import { type } from 'os';
+import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 
-function rootReducer(state = {
+
+function gistReducer(state = {
     loading: false,
     data: []
 }, action) {
@@ -18,11 +18,13 @@ function rootReducer(state = {
     }
 }
 
+const rootReducer = combineReducers({
+    gist: gistReducer,
+});
 
 function isClient() {
     return typeof window !== "undefined" && window.document;
 }
-
 
 export function configureStore() {
 
