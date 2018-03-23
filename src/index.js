@@ -1,20 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { 
-    BrowserRouter as Router, 
-    Route, Switch, Link 
-} from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { createBrowserHistory } from 'history';
+import { Route, Switch, Link, Router } from 'react-router-dom';
 
 import App from './shared/App';
 import routes from './shared/routes';
 import { configureStore } from './shared/redux';
 
-const store = configureStore();
+
+const history = createBrowserHistory();
+const store = configureStore(history);
 
 ReactDOM.hydrate(
     <Provider store={store}>
-        <Router>
+        <Router history={history}>
             <App>
                 <Switch>
                 {routes.map(route => (

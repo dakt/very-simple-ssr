@@ -4,6 +4,7 @@ import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { matchPath, MemoryRouter as Router } from 'react-router';
 import { Provider } from 'react-redux';
+import { createMemoryHistory } from 'history';
 
 import App from './shared/App';
 import routes from './shared/routes';
@@ -37,9 +38,10 @@ const app = express();
 app.use(express.static('dist'));
 
 app.get('/*', async (req, res) => {
-    console.log(req.method, req.url);
+    console.log(req.method, req.path);
 
-    const store = configureStore();
+    const history = createMemoryHistory({ initialEntries: [req.path] });
+    const store = configureStore(history);
 
     let match = routes.reduce((acc, route) => {
         const found = matchPath(req.url, route);

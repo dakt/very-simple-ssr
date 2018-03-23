@@ -18,7 +18,16 @@ function gistReducer(state = {
     }
 }
 
+function routeReducer(state = {}, action) {
+    if (action.type === 'ROUTE_CHANGED') {
+        return action.payload;
+    }
+
+    return state;
+}
+
 const rootReducer = combineReducers({
+    route: routeReducer,
     gist: gistReducer,
 });
 
@@ -26,7 +35,7 @@ function isClient() {
     return typeof window !== "undefined" && window.document;
 }
 
-export function configureStore() {
+export function configureStore(history) {
 
     const composeEnhancers = isClient() ? (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose) : compose;
 
@@ -38,9 +47,22 @@ export function configureStore() {
         rootReducer,
         initialState,
         composeEnhancers(
-            applyMiddleware(...middlewares)
+            applyMiddleware(...middlewares),
         )
     );
+
+    history.listen((location, a) => {
+        store.dispatch({
+            type: 'ROUTE_CHANGED',
+            payload: location,
+        });
+    });
+
+    // Initial route chane
+    store.dispatch({
+        type: 'ROUTE_CHANGED',
+        payload: history.location,
+    });
 
     return store;
 }
