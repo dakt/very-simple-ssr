@@ -7,10 +7,12 @@ import { Route, Switch, Link, Router } from 'react-router-dom';
 import App from './shared/App';
 import routes from './shared/routes';
 import { configureStore } from './shared/redux';
+import * as SwManager from './swManager';
 
 
 const history = createBrowserHistory();
 const store = configureStore(history);
+SwManager.register('serviceWorker.js');
 
 ReactDOM.hydrate(
     <Provider store={store}>
