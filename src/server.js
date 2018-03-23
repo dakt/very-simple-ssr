@@ -38,9 +38,9 @@ const app = express();
 app.use(express.static('dist'));
 
 app.get('/*', async (req, res) => {
-    console.log(req.method, req.path);
+    console.log(req.method, req.url);
 
-    const history = createMemoryHistory({ initialEntries: [req.path] });
+    const history = createMemoryHistory({ initialEntries: [req.url] });
     const store = configureStore(history);
 
     let match = routes.reduce((acc, route) => {
@@ -51,7 +51,12 @@ app.get('/*', async (req, res) => {
     match === null && (match = { component: NotFound });
 
     match.component.getInitialData && 
-        await match.component.getInitialData({ ...req, dispatch: store.dispatch });
+        await match.component.getInitialData({ 
+            ...req, 
+            dispatch: store.dispatch,
+            getState: store.getState,
+            isServer: true,
+        });
 
     const Component = (
         <Provider store={store}>

@@ -1,4 +1,5 @@
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
+import qs from 'query-string';
 
 
 function gistReducer(state = {
@@ -54,14 +55,20 @@ export function configureStore(history) {
     history.listen((location, a) => {
         store.dispatch({
             type: 'ROUTE_CHANGED',
-            payload: location,
+            payload: {
+                ...location,
+                qs: qs.parse(location.search),
+            },
         });
     });
 
-    // Initial route chane
+    // Initial route change
     store.dispatch({
         type: 'ROUTE_CHANGED',
-        payload: history.location,
+        payload: {
+            ...history.location,
+            qs: qs.parse(history.location.search),
+        }
     });
 
     return store;

@@ -17,14 +17,28 @@ ReactDOM.hydrate(
         <Router history={history}>
             <App>
                 <Switch>
-                {routes.map(route => (
-                    <Route
-                        key={route.path}
-                        path={route.path}
-                        exact={route.exact}
-                        component={route.component} 
-                    />
-                ))}
+                {routes.map(route => {
+
+                    const render = (props) => {
+                        const Component = route.component;
+                        Component.getInitialData && Component.getInitialData({
+                            dispatch: store.dispatch,
+                            getState: store.getState,
+                            isServer: false,
+                        });
+
+                        return <Component {...props} />
+                    }
+                    
+                    return (
+                        <Route
+                            key={route.path}
+                            path={route.path}
+                            exact={route.exact}
+                            render={render}
+                        />
+                    );
+                })}
                 </Switch>
             </App>
         </Router>

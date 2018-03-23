@@ -4,10 +4,12 @@ import { connect } from 'react-redux';
 
 export class GistList extends React.Component {
 
-    static async getInitialData({ dispatch }) {
+    static async getInitialData({ isServer, dispatch, getState }) {
+        const state = getState();
+
         try {
             dispatch({ type: 'GET_GIST_REQUEST' });
-            const payload = await fetch('https://api.github.com/gists/public').then(response => response.json());
+            const payload = await fetch('https://jsonplaceholder.typicode.com/users?_page=1&_limit=5').then(response => response.json());
             dispatch({ type: 'GET_GIST_SUCCESS', payload });
         } catch (error) {
             dispatch({ type: 'GET_GIST_FAILURE', error });
@@ -22,9 +24,8 @@ export class GistList extends React.Component {
                     <tbody>
                         {this.props.data.map(d => (
                             <tr key={d.id}>
-                                <td><img src={d.owner.avatar_url} /></td>
-                                <td>{d.owner.login}</td>
-                                <td>{new Intl.DateTimeFormat('en').format(new Date(d.created_at))}</td>
+                                <td>{d.name}</td>
+                                <td>{d.email}</td>
                             </tr>
                         ))}
                     </tbody>
