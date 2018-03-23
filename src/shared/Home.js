@@ -24,6 +24,7 @@ export class GistList extends React.Component {
                             <tr key={d.id}>
                                 <td><img src={d.owner.avatar_url} /></td>
                                 <td>{d.owner.login}</td>
+                                <td>{new Intl.DateTimeFormat('en').format(new Date(d.created_at))}</td>
                             </tr>
                         ))}
                     </tbody>
