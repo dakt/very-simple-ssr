@@ -38,13 +38,13 @@ const app = express();
 app.use(express.static('dist'));
 
 app.get('/*', async (req, res) => {
-    console.log(req.method, req.url);
+    console.log(req.method, req.path);
 
-    const history = createMemoryHistory({ initialEntries: [req.url] });
+    const history = createMemoryHistory({ initialEntries: [req.path] });
     const store = configureStore(history);
 
     let match = routes.reduce((acc, route) => {
-        const found = matchPath(req.url, route);
+        const found = matchPath(req.path, route);
         return found ? route : acc;
     }, null);
 
