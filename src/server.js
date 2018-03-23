@@ -40,7 +40,7 @@ app.use(express.static('dist'));
 app.get('/*', async (req, res) => {
     console.log(req.method, req.path);
 
-    const history = createMemoryHistory({ initialEntries: [req.path] });
+    const history = createMemoryHistory({ initialEntries: [req.url] });
     const store = configureStore(history);
 
     let match = routes.reduce((acc, route) => {

@@ -52,7 +52,7 @@ export function configureStore(history) {
         )
     );
 
-    history.listen((location, a) => {
+    history.listen((location, action) => {
         store.dispatch({
             type: 'ROUTE_CHANGED',
             payload: {
@@ -68,6 +68,7 @@ export function configureStore(history) {
         payload: {
             ...history.location,
             qs: qs.parse(history.location.search),
+            type: 'SERVER',
         }
     });
 

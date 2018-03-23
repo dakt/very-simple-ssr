@@ -1,6 +1,9 @@
+html, body {
+    margin: 0;
+}
+
 .app {
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    padding: 10px;
 }
 
 .appNavigationBar {
