@@ -8,11 +8,11 @@ function rootReducer(state = {
 
     switch (action.type) {
         case 'GET_GIST_REQUEST':
-            return { loading: true, };
+            return { ...state, loading: true, };
         case 'GET_GIST_SUCCESS':
-            return { loading: false, data: action.payload };
+            return { ...state, loading: false, data: action.payload };
         case 'GET_GIST_FAILURE':
-            return { loading: false, };
+            return { ...state, loading: false, };
         default:
             return state;
     }

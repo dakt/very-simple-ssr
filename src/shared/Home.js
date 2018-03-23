@@ -2,35 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 
-class GistList extends React.Component {
-    render() {
-        return (
-            <table className="table">
-                <tbody>
-                    {this.props.data.map(d => (
-                        <tr key={d.id}>
-                            <td><img src={d.owner.avatar_url} /></td>
-                            <td>{d.owner.login}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        );
-    }
-}
+export class GistList extends React.Component {
 
-
-const mapStateToProps = (state) => ({
-    loading: state.loading,
-    data: state.data,
-});
-
-const ConnectedGistList = connect(mapStateToProps)(GistList);
-
-
-export default class extends React.Component {
-
-    static async getInitialData({ ctx, dispatch }) {
+    static async getInitialData({ dispatch }) {
         try {
             dispatch({ type: 'GET_GIST_REQUEST' });
             const payload = await fetch('https://api.github.com/gists/public').then(response => response.json());
@@ -44,8 +18,24 @@ export default class extends React.Component {
         return (
             <div>
                 <h1>Home</h1>
-                <ConnectedGistList />
+                <table className="table">
+                    <tbody>
+                        {this.props.data.map(d => (
+                            <tr key={d.id}>
+                                <td><img src={d.owner.avatar_url} /></td>
+                                <td>{d.owner.login}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </div>
         );
     }
 }
+
+const mapStateToProps = (state) => ({
+    loading: state.loading,
+    data: state.data,
+});
+
+export default connect(mapStateToProps)(GistList);

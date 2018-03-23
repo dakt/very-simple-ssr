@@ -49,7 +49,7 @@ app.get('/*', async (req, res) => {
     match === null && (match = { component: NotFound });
 
     match.component.getInitialData && 
-        await match.component.getInitialData({ req, dispatch: store.dispatch });
+        await match.component.getInitialData({ ...req, dispatch: store.dispatch });
 
     const Component = (
         <Provider store={store}>
