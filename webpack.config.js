@@ -1,6 +1,7 @@
 const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
+
 const client = {
     mode: 'development',
     target: 'web',
@@ -28,6 +29,11 @@ const client = {
                 })
             }
         ]
+    },
+    optimization: {
+        splitChunks: {
+            chunks: 'all',
+        }
     },
     plugins: [
         new ExtractTextPlugin('styles.css'),

@@ -20,6 +20,7 @@ function renderToHTML(Element, initialProps) {
     <head>
         <title>SSR</title>
         <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
+        <script defer type="text/javascript" src="vendors~bundle.js"></script>
         <script defer type="text/javascript" src="bundle.js"></script>
         <link rel="stylesheet" href="styles.css">
     </head>
