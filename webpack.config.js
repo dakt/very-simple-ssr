@@ -7,7 +7,7 @@ const client = {
     target: 'web',
     entry: {
         bundle: ['babel-polyfill', './src/index.js'],
-        serviceWorker: './src/worker.js',
+        serviceWorker: './src/serviceWorker.js',
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
