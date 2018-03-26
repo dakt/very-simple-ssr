@@ -1,14 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import UserCard from './UserCard';
+
 
 export class GistList extends React.Component {
 
     mouseDown = false;
-    mouseX = 0;
-    delta = 0;
-
-    element = null;
+    lastMouseX = null;
+    positionX = null;
     cards = [];
 
     static async getInitialData({ isServer, dispatch, getState }) {
@@ -37,44 +37,73 @@ export class GistList extends React.Component {
         }
     }
 
-    componentDidMount() {
-        window.requestAnimationFrame(this.handleAnimationFrameChange);
+    update(element, clientX) {
+        // Calculate delta
+        const delta = clientX - this.lastMouseX;
+
+        // Update last mouse position
+        this.lastMouseX = clientX;
+
+        // Calcualte new position
+        this.positionX = this.positionX + delta;
+
+        window.requestAnimationFrame(() => {
+            element.style.transform = `translateX(${this.positionX}px)`;
+        });
     }
 
-    handleAnimationFrameChange = (timestamp) => {
+    reset(element) {
+        // Calculate next position
+        this.positionX += -(this.positionX / 4);
 
-        console.log('!');
+        element.style.transform = `translateX(${this.positionX}px)`;
 
-
-
-        
+        if (this.positionX !== 0) {
+            window.requestAnimationFrame(() => this.reset(element));
+        }        
     }
 
     handleMouseDown(event) {
-        this.element = event.currentTarget;
-        this.mouseX = event.clientX;
         this.mouseDown = true;
+        this.positionX = 0;
+        this.lastMouseX = event.clientX;
     }
 
     handleMouseMove(event) {
         const element = event.currentTarget;
-
-        if(this.mouseDown) {
-            //window.requestAnimationFrame(this.handleAnimationFrameChange);
-
-            const newDelta = (event.clientX - this.mouseX);
-
-            this.delta = newDelta;
-
-            this.mouseX = this.mouseX + newDelta;
-            this.element.style.transform = `translateX(${this.mouseX}px)`;
+        if (this.mouseDown) {
+            this.update(element, event.clientX);
         }
-
     }
 
     handleMouseUp(event) {
+        const element = event.currentTarget;
         this.mouseDown = false;
-        this.element = null;
+        setTimeout(() => {
+            window.requestAnimationFrame(() => this.reset(element));
+        }, 100);
+    }
+
+    handleTouchStart(event) {
+        const element = event.currentTarget;
+        this.mouseDown = true;
+        this.positionX = 0;
+        this.lastMouseX = event.clientX || event.touches[0].clientX;
+    }
+
+    handleTouchMove(event) {
+        const element = event.currentTarget;
+        if (this.mouseDown) {
+            this.update(element, event.clientX || event.touches[0].clientX);
+        }
+    }
+
+    handleTouchEnd(event) {
+        const element = event.currentTarget;
+        this.mouseDown = false;
+        setTimeout(() => {
+            window.requestAnimationFrame(() => this.reset(element));
+        }, 100);
     }
 
     render() {
@@ -88,27 +117,19 @@ export class GistList extends React.Component {
                     <UserCard
                         key={user.id}
                         data={user}
-                        ref={node => this.cards.push(node)}
+                        //cardRef={node => this.cards.push(node)}
                         onMouseDown={(e) => this.handleMouseDown(e)}
                         onMouseUp={(e) => this.handleMouseUp(e)}
                         onMouseMove={(e) => this.handleMouseMove(e)}
+                        onTouchStart={(e) => this.handleTouchStart(e)}
+                        onTouchEnd={(e) => this.handleTouchEnd(e)}
+                        onTouchMove={(e) => this.handleTouchMove(e)}
                     />
                 ))}
             </div>
         );
     }
 }
-
-class UserCard extends React.Component {
-    render() {
-        return (
-            <div className="userCard" {...this.props}>
-                <div className="userName">{this.props.data.name}</div>
-                <div className="userEmail">{this.props.data.email}</div>
-            </div>
-        );
-    }
-};
 
 const mapStateToProps = (state) => ({
     loading: state.gist.loading,

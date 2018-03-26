@@ -41,7 +41,7 @@ serverCompiler.watch({
         server.close();
     }
 
-    server = app.listen(3000, () => {
+    server = app.listen(3000, '0.0.0.0', () => {
         console.log('Server started');
     });
 
