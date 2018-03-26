@@ -4,15 +4,25 @@ import qs from 'query-string';
 
 function gistReducer(state = {
     loading: false,
-    data: []
+    data: [],
+    pagination: {
+        page: 1,
+        count: 0,
+        limit: 10,
+    }
 }, action) {
 
     switch (action.type) {
-        case 'GET_GIST_REQUEST':
+        case 'GET_DATA_REQUEST':
             return { ...state, loading: true, };
-        case 'GET_GIST_SUCCESS':
-            return { ...state, loading: false, data: action.payload };
-        case 'GET_GIST_FAILURE':
+        case 'GET_DATA_SUCCESS':
+            return { 
+                ...state,
+                loading: false,
+                data: action.payload.data,
+                pagination: action.payload.pagination,
+            };
+        case 'GET_DATA_FAILURE':
             return { ...state, loading: false, };
         default:
             return state;
