@@ -58,9 +58,12 @@ export class GistList extends React.Component {
 
         element.style.transform = `translateX(${this.positionX}px)`;
 
-        if (this.positionX !== 0) {
+        if (this.positionX > 0.1 || this.positionX < -0.1) {
             window.requestAnimationFrame(() => this.reset(element));
-        }        
+        } else {
+            this.positionX = 0;
+            element.removeAttribute('style');
+        }
     }
 
     handleMouseDown(event) {
