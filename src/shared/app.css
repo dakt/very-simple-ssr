@@ -22,19 +22,3 @@ html, body {
     background: lightgray;
     min-height: 500px;
 }
-
-.userCard {
-    position: relative;
-    padding: 20px 20px;
-    background: #fff;
-    border-bottom: 1px solid lightgray;
-    cursor: pointer;
-}
-
-.userName {
-
-}
-
-.userEmail {
-    margin-top: 10px;
-}

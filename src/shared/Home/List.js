@@ -1,7 +1,5 @@
 import React from 'react';
 
-import UserCard from './UserCard';
-
 
 export default class List extends React.Component {
 
@@ -84,18 +82,18 @@ export default class List extends React.Component {
     render() {
         return (
             <div style={{ overflowX: "hidden" }}>
-                {this.props.data.map(user => (
-                    <UserCard
-                        key={user.id}
-                        data={user}
-                        //cardRef={node => this.cards.push(node)}
+                {this.props.data.map(d => (
+                    <div
+                        key={d.id}
                         onMouseDown={(e) => this.handleMouseDown(e)}
                         onMouseUp={(e) => this.handleMouseUp(e)}
                         onMouseMove={(e) => this.handleMouseMove(e)}
                         onTouchStart={(e) => this.handleTouchStart(e)}
                         onTouchEnd={(e) => this.handleTouchEnd(e)}
                         onTouchMove={(e) => this.handleTouchMove(e)}
-                    />
+                    >
+                        {this.props.children(d)}
+                    </div>
                 ))}
             </div>
         );

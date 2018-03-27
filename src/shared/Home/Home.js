@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import List from './List';
+import UserCard from './UserCard';
 
 
 export class GistList extends React.Component {
@@ -34,10 +35,13 @@ export class GistList extends React.Component {
 
     render() {
         return (
-            <List 
-                data={this.props.data}
-                loading={this.props.loading}
-            />
+            <List data={this.props.data} loading={this.props.loading}>
+                {
+                    data => (
+                        <UserCard data={data} />
+                    )
+                }
+            </List>
         );
     }
 }
