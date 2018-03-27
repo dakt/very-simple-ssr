@@ -19,7 +19,6 @@ html, body {
 }
 
 .appBody {
-    padding: 10px;
     background: lightgray;
     min-height: 500px;
 }
@@ -28,9 +27,8 @@ html, body {
     position: relative;
     padding: 20px 20px;
     background: #fff;
-    margin-top: 2px;
+    border-bottom: 1px solid lightgray;
     cursor: pointer;
-    transform:translateX(0);
 }
 
 .userName {
