@@ -5,6 +5,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const client = {
     mode: 'development',
     target: 'web',
+    devtool: 'source-map',
     entry: {
         bundle: ['babel-polyfill', './src/index.js'],
         serviceWorker: './src/serviceWorker.js',
