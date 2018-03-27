@@ -40,7 +40,7 @@ export default class List extends React.Component {
         }
     }
 
-    leave(element) {
+    leave(element, callback) {
         // Calculate next position
         this.positionX += 30;
 
@@ -128,11 +128,12 @@ export default class List extends React.Component {
                 {this.props.data.map(d => (
                     <div
                         key={d[this.props.idField]}
+                        /** Mouse events */
                         onMouseDown={(e) => this.handleMouseDown(e, d)}
                         onMouseUp={(e) => this.handleMouseUp(e, d)}
                         onMouseMove={(e) => this.handleMouseMove(e, d)}
                         onMouseLeave={(e) => this.handleMouseLeave(e, d)}
-                        
+                        /** Touch events */
                         onTouchStart={(e) => this.handleTouchStart(e, d)}
                         onTouchEnd={(e) => this.handleTouchEnd(e, d)}
                         onTouchMove={(e) => this.handleTouchMove(e, d)}
