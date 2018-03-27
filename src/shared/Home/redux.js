@@ -36,13 +36,12 @@ function gistReducer(state = INITIAL_STATE, action) {
         case 'GIST_DELETE_SUCCESS':
             return {
                 ...state,
-                //data: state.data.filter(d => d.id !== action.payload.id),
-                //checked: state.checked.filter(id => id !== action.payload.id),
+                data: state.data.filter(d => d.id !== action.payload.id),
+                checked: state.checked.filter(id => id !== action.payload.id),
             };
         default:
             return state;
     }
 }
-
 
 export default gistReducer;

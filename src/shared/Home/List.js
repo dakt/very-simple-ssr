@@ -7,6 +7,35 @@ export default class List extends React.Component {
     lastMouseX = null;
     positionX = null;
 
+    repositionNodesBelow(element, data) {
+
+        let isBelow = false;
+        this.list.childNodes.forEach(node => {
+            if (node === element) 
+            {
+                isBelow = true;
+            }
+            else if (isBelow)
+            {
+                window.requestAnimationFrame(() => this.moveUp(node, data, 1))        
+            }
+        });
+    }
+
+    moveUp(element, data, step) {
+        const pixelOffset = step * 8;
+        element.style.transform = `translateY(${-pixelOffset}px)`;
+
+        if (pixelOffset <= element.offsetHeight)
+        {
+            window.requestAnimationFrame(() => this.moveUp(element, data, ++step));
+        }
+        else
+        {
+            //this.props.onRemove(data);
+        }
+    }
+
     updatePosition(element, clientX) {
         // Calculate delta
         const delta = clientX - this.lastMouseX;
@@ -39,7 +68,7 @@ export default class List extends React.Component {
         }
     }
 
-    leaveScreen(element) {
+    leaveScreen(element, data) {
         // Calculate next position
         this.positionX += 30;
 
@@ -47,7 +76,12 @@ export default class List extends React.Component {
 
         if (this.positionX < document.documentElement.clientWidth)
         {
-            window.requestAnimationFrame(() => this.leaveScreen(element));
+            window.requestAnimationFrame(() => this.leaveScreen(element, data));
+        }
+        else
+        {
+            //this.list.removeChild(element);
+            this.repositionNodesBelow(element, data);
         }
     }
 
@@ -56,8 +90,7 @@ export default class List extends React.Component {
 
         if (this.positionX > element.parentNode.offsetWidth * 0.4)
         {
-            window.requestAnimationFrame(() => this.leaveScreen(element));
-            this.props.onRemove(data);
+            window.requestAnimationFrame(() => this.leaveScreen(element, data));
         }
         else 
         {
@@ -115,11 +148,13 @@ export default class List extends React.Component {
     }
 
     render() {
+
+        console.log('render');
+
         return (
-            <div style={{ overflowX: "hidden" }}>
+            <div style={{ overflowX: "hidden" }} ref={node => this.list = node}>
                 {this.props.data.map(d => (
                     <div
-                        ref={node => this.list = node}
                         key={d[this.props.idField]}
                         /** Mouse events */
                         onMouseDown={(e) => this.handleMouseDown(e, d)}
