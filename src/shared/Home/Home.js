@@ -43,7 +43,7 @@ export class GistList extends React.Component {
     }
 
     handleRemoveItem(data) {
-        console.log('Remove', data);
+        this.props.remove(data.id);
     }
 
     render() {
@@ -81,6 +81,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     toggleCheck: (id) => dispatch({ type: "GIST_CHECK", payload: { id } }),
+    remove: (id) => dispatch({ type: 'GIST_DELETE_SUCCESS', payload: { id }}),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(GistList);

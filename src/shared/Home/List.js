@@ -8,7 +8,12 @@ export default class List extends React.Component {
     lastMouseX = null;
     positionX = null;
 
-    update(element, clientX) {
+    reset() {
+        this.mouseDown = false;
+        this.mouseOver = false;
+    }
+
+    updatePosition(element, clientX) {
         // Calculate delta
         const delta = clientX - this.lastMouseX;
 
@@ -23,7 +28,7 @@ export default class List extends React.Component {
         });
     }
 
-    reset(element) {
+    resetPosition(element) {
         // Calculate next position
         this.positionX += -(this.positionX / 4);
 
@@ -31,7 +36,7 @@ export default class List extends React.Component {
 
         if (this.positionX > 0.1 || this.positionX < -0.1)
         {
-            window.requestAnimationFrame(() => this.reset(element));
+            window.requestAnimationFrame(() => this.resetPosition(element));
         }
         else
         {
@@ -40,7 +45,7 @@ export default class List extends React.Component {
         }
     }
 
-    leave(element, callback) {
+    leaveScreen(element) {
         // Calculate next position
         this.positionX += 30;
 
@@ -48,22 +53,20 @@ export default class List extends React.Component {
 
         if (this.positionX < document.documentElement.clientWidth)
         {
-            window.requestAnimationFrame(() => this.leave(element));
+            window.requestAnimationFrame(() => this.leaveScreen(element));
         }
     }
 
     swipe(element, data) {
-        const { left } = element.getBoundingClientRect();
-
-        if (left > element.parentNode.offsetWidth * 0.4) 
+        if (this.positionX > element.parentNode.offsetWidth * 0.4) 
         {
-            window.requestAnimationFrame(() => this.leave(element));
+            window.requestAnimationFrame(() => this.leaveScreen(element));
             this.props.onRemove(data);
-        } 
+        }
         else 
         {
             setTimeout(() => {
-                window.requestAnimationFrame(() => this.reset(element));
+                window.requestAnimationFrame(() => this.resetPosition(element));
             }, 100);
         }
     }
@@ -71,16 +74,14 @@ export default class List extends React.Component {
     /**** Mouse events ****/
 
     handleMouseDown(event) {
-        this.mouseDown = true;
-        this.mouseOver = true;
         this.positionX = 0;
+        this.mouseDown = true;
         this.lastMouseX = event.clientX;
     }
 
     handleMouseUp(event, data) {
         const element = event.currentTarget;
         this.mouseDown = false;
-        this.mouseOver = false;
         this.swipe(element, data);
     }
 
@@ -89,13 +90,18 @@ export default class List extends React.Component {
 
         if (this.mouseDown && this.mouseOver)
         {
-            this.update(element, event.clientX);
+            this.updatePosition(element, event.clientX);
         }
     }
 
+    handleMouseEnter(event) {
+        this.mouseOver = true;
+    }
+
     handleMouseLeave(event, data) {
+        console.log('leave')
         const element = event.currentTarget;
-        this.mouseOver = false;
+        this.reset();
         this.swipe(element, data);
     }
 
@@ -112,7 +118,7 @@ export default class List extends React.Component {
         const element = event.currentTarget;
         if (this.mouseDown)
         {
-            this.update(element, event.clientX || event.touches[0].clientX);
+            this.updatePosition(element, event.clientX || event.touches[0].clientX);
         }
     }
 
@@ -132,6 +138,7 @@ export default class List extends React.Component {
                         onMouseDown={(e) => this.handleMouseDown(e, d)}
                         onMouseUp={(e) => this.handleMouseUp(e, d)}
                         onMouseMove={(e) => this.handleMouseMove(e, d)}
+                        onMouseEnter={(e) => this.handleMouseEnter(e, d)}
                         onMouseLeave={(e) => this.handleMouseLeave(e, d)}
                         /** Touch events */
                         onTouchStart={(e) => this.handleTouchStart(e, d)}
