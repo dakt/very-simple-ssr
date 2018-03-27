@@ -42,12 +42,20 @@ export class GistList extends React.Component {
         this.props.toggleCheck(data.id);
     }
 
+    handleRemoveItem(data) {
+        console.log('Remove', data);
+    }
+
     render() {
         return (
             <div>
                 <div className={styles.navigation}>
                 </div>
-                <List data={this.props.data} loading={this.props.loading}>
+                <List
+                    data={this.props.data}
+                    loading={this.props.loading}
+                    onRemove={(data) => this.handleRemoveItem(data)}
+                >
                     {
                         data => (
                             <UserCard

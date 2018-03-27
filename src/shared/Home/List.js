@@ -4,6 +4,7 @@ import React from 'react';
 export default class List extends React.Component {
 
     mouseDown = false;
+    mouseOver = false;
     lastMouseX = null;
     positionX = null;
 
@@ -28,34 +29,77 @@ export default class List extends React.Component {
 
         element.style.transform = `translateX(${this.positionX}px)`;
 
-        if (this.positionX > 0.1 || this.positionX < -0.1) {
+        if (this.positionX > 0.1 || this.positionX < -0.1)
+        {
             window.requestAnimationFrame(() => this.reset(element));
-        } else {
+        }
+        else
+        {
             this.positionX = 0;
             element.removeAttribute('style');
         }
     }
 
+    leave(element) {
+        // Calculate next position
+        this.positionX += 30;
+
+        element.style.transform = `translateX(${this.positionX}px)`;
+
+        if (this.positionX < document.documentElement.clientWidth)
+        {
+            window.requestAnimationFrame(() => this.leave(element));
+        }
+    }
+
+    swipe(element, data) {
+        const { left } = element.getBoundingClientRect();
+
+        if (left > element.parentNode.offsetWidth * 0.4) 
+        {
+            window.requestAnimationFrame(() => this.leave(element));
+            this.props.onRemove(data);
+        } 
+        else 
+        {
+            setTimeout(() => {
+                window.requestAnimationFrame(() => this.reset(element));
+            }, 100);
+        }
+    }
+
+    /**** Mouse events ****/
+
     handleMouseDown(event) {
         this.mouseDown = true;
+        this.mouseOver = true;
         this.positionX = 0;
         this.lastMouseX = event.clientX;
     }
 
+    handleMouseUp(event, data) {
+        const element = event.currentTarget;
+        this.mouseDown = false;
+        this.mouseOver = false;
+        this.swipe(element, data);
+    }
+
     handleMouseMove(event) {
         const element = event.currentTarget;
-        if (this.mouseDown) {
+
+        if (this.mouseDown && this.mouseOver)
+        {
             this.update(element, event.clientX);
         }
     }
 
-    handleMouseUp(event) {
+    handleMouseLeave(event, data) {
         const element = event.currentTarget;
-        this.mouseDown = false;
-        setTimeout(() => {
-            window.requestAnimationFrame(() => this.reset(element));
-        }, 100);
+        this.mouseOver = false;
+        this.swipe(element, data);
     }
+
+    /**** Touch events ****/
 
     handleTouchStart(event) {
         const element = event.currentTarget;
@@ -66,7 +110,8 @@ export default class List extends React.Component {
 
     handleTouchMove(event) {
         const element = event.currentTarget;
-        if (this.mouseDown) {
+        if (this.mouseDown)
+        {
             this.update(element, event.clientX || event.touches[0].clientX);
         }
     }
@@ -74,9 +119,7 @@ export default class List extends React.Component {
     handleTouchEnd(event) {
         const element = event.currentTarget;
         this.mouseDown = false;
-        setTimeout(() => {
-            window.requestAnimationFrame(() => this.reset(element));
-        }, 100);
+        this.swipe(element);
     }
 
     render() {
@@ -85,12 +128,14 @@ export default class List extends React.Component {
                 {this.props.data.map(d => (
                     <div
                         key={d[this.props.idField]}
-                        onMouseDown={(e) => this.handleMouseDown(e)}
-                        onMouseUp={(e) => this.handleMouseUp(e)}
-                        onMouseMove={(e) => this.handleMouseMove(e)}
-                        onTouchStart={(e) => this.handleTouchStart(e)}
-                        onTouchEnd={(e) => this.handleTouchEnd(e)}
-                        onTouchMove={(e) => this.handleTouchMove(e)}
+                        onMouseDown={(e) => this.handleMouseDown(e, d)}
+                        onMouseUp={(e) => this.handleMouseUp(e, d)}
+                        onMouseMove={(e) => this.handleMouseMove(e, d)}
+                        onMouseLeave={(e) => this.handleMouseLeave(e, d)}
+                        
+                        onTouchStart={(e) => this.handleTouchStart(e, d)}
+                        onTouchEnd={(e) => this.handleTouchEnd(e, d)}
+                        onTouchMove={(e) => this.handleTouchMove(e, d)}
                     >
                         {this.props.children(d)}
                     </div>
@@ -102,4 +147,5 @@ export default class List extends React.Component {
 
 List.defaultProps = {
     idField: "id",
+    onRemove: f => f,
 };
