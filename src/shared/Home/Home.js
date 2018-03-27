@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import List from './List';
 import UserCard from './UserCard';
+import styles from './Home.css';
 
 
 export class GistList extends React.Component {
@@ -33,15 +34,32 @@ export class GistList extends React.Component {
         }
     }
 
+    handleClick() {
+
+    }
+
+    handleChecked(event, data) {
+        this.props.toggleCheck(data.id);
+    }
+
     render() {
         return (
-            <List data={this.props.data} loading={this.props.loading}>
-                {
-                    data => (
-                        <UserCard data={data} />
-                    )
-                }
-            </List>
+            <div>
+                <div className={styles.navigation}>
+                </div>
+                <List data={this.props.data} loading={this.props.loading}>
+                    {
+                        data => (
+                            <UserCard
+                                data={data}
+                                onClick={() => this.handleClick()}
+                                onChecked={(e, data) => this.handleChecked(e, data)}
+                                checked={this.props.checked.includes(data.id)}
+                            />
+                        )
+                    }
+                </List>
+            </div>
         );
     }
 }
@@ -49,7 +67,12 @@ export class GistList extends React.Component {
 const mapStateToProps = (state) => ({
     loading: state.gist.loading,
     data: state.gist.data,
+    checked: state.gist.checked,
     pagination: state.gist.pagination,
 });
 
-export default connect(mapStateToProps)(GistList);
+const mapDispatchToProps = (dispatch) => ({
+    toggleCheck: (id) => dispatch({ type: "GIST_CHECK", payload: { id } }),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(GistList);

@@ -84,7 +84,7 @@ export default class List extends React.Component {
             <div style={{ overflowX: "hidden" }}>
                 {this.props.data.map(d => (
                     <div
-                        key={d.id}
+                        key={d[this.props.idField]}
                         onMouseDown={(e) => this.handleMouseDown(e)}
                         onMouseUp={(e) => this.handleMouseUp(e)}
                         onMouseMove={(e) => this.handleMouseMove(e)}
@@ -99,3 +99,7 @@ export default class List extends React.Component {
         );
     }
 }
+
+List.defaultProps = {
+    idField: "id",
+};

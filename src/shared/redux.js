@@ -1,33 +1,8 @@
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import qs from 'query-string';
 
+import gistReducer from './Home/redux';
 
-function gistReducer(state = {
-    loading: false,
-    data: [],
-    pagination: {
-        page: 1,
-        count: 0,
-        limit: 10,
-    }
-}, action) {
-
-    switch (action.type) {
-        case 'GET_DATA_REQUEST':
-            return { ...state, loading: true, };
-        case 'GET_DATA_SUCCESS':
-            return { 
-                ...state,
-                loading: false,
-                data: action.payload.data,
-                pagination: action.payload.pagination,
-            };
-        case 'GET_DATA_FAILURE':
-            return { ...state, loading: false, };
-        default:
-            return state;
-    }
-}
 
 function routeReducer(state = {}, action) {
     if (action.type === 'ROUTE_CHANGED') {
