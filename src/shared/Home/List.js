@@ -80,11 +80,7 @@ export default class List extends React.Component {
 
     handleMouseMove(event) {
         const element = event.currentTarget;
-
-        if (this.trackMouse)
-        {
-            this.updatePosition(element, event.clientX);
-        }
+        this.trackMouse && this.updatePosition(element, event.clientX);
     }
 
     handleMouseEnter(event) {
@@ -93,7 +89,7 @@ export default class List extends React.Component {
 
     handleMouseLeave(event, data) {
         const element = event.currentTarget;
-        this.release(element, data);
+        this.trackMouse && this.release(element, data);
     }
 
     /************ Touch handlers ************/
@@ -123,6 +119,7 @@ export default class List extends React.Component {
             <div style={{ overflowX: "hidden" }}>
                 {this.props.data.map(d => (
                     <div
+                        ref={node => this.list = node}
                         key={d[this.props.idField]}
                         /** Mouse events */
                         onMouseDown={(e) => this.handleMouseDown(e, d)}

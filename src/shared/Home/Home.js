@@ -43,6 +43,7 @@ export class GistList extends React.Component {
     }
 
     handleRemoveItem(data) {
+        console.log('To be removed:', data);
         this.props.remove(data.id);
     }
 
