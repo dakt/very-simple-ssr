@@ -6,6 +6,11 @@
     cursor: pointer;
 }
 
+.checked {
+    background: #efefef;
+    transition: background, 300ms;
+}
+
 .iconContainer {
     display: flex;
     justify-content: center;

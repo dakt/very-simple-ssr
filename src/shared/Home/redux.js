@@ -1,4 +1,5 @@
-function gistReducer(state = {
+
+const INITIAL_STATE = {
     loading: false,
     data: [],
     checked: [],
@@ -6,8 +7,10 @@ function gistReducer(state = {
         page: 1,
         count: 0,
         limit: 10,
-    }
-}, action) {
+    },
+};
+
+function gistReducer(state = INITIAL_STATE, action) {
 
     switch (action.type) {
         case 'GET_DATA_REQUEST':
@@ -24,9 +27,11 @@ function gistReducer(state = {
         case 'GIST_CHECK':
             return { 
                 ...state,
-                checked: state.checked.includes(action.payload.id) 
-                    ? state.checked.filter(id => id !== action.payload.id)
-                    : [...state.checked, action.payload.id],
+                checked: (
+                    state.checked.includes(action.payload.id) 
+                        ? state.checked.filter(id => id !== action.payload.id)
+                        : [...state.checked, action.payload.id]
+                ),
             };
         default:
             return state;

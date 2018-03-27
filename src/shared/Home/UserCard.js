@@ -1,4 +1,5 @@
 import React from 'react';
+import cx from 'classnames';
 
 import Check from './Check';
 import styles from './UserCard.css';
@@ -8,7 +9,7 @@ import styles from './UserCard.css';
 export default class UserCard extends React.Component {
     render() {
         return (
-            <div className={styles.container}>
+            <div className={cx(styles.container, { [styles.checked]: this.props.checked })}>
                 <div className={styles.iconContainer}>
                     <Check
                         checked={this.props.checked}
