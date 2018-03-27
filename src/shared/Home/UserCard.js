@@ -1,15 +1,16 @@
 import React from 'react';
 
-import './UserCard.css';
+import styles from './UserCard.css';
+
 
 
 export default class UserCard extends React.Component {
     render() {
         return (
-            <div className="userCard" {...this.props}>
-                <div className="userName">{this.props.data.name}</div>
-                <div className="userName">{this.props.data.username}</div>
-                <div className="userEmail">{this.props.data.email}</div>
+            <div className={styles.container} {...this.props}>
+                <div>{this.props.data.name}</div>
+                <div>{this.props.data.username}</div>
+                <div>{this.props.data.email}</div>
             </div>
         );
     }

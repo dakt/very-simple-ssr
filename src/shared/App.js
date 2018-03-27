@@ -1,18 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import './app.css';
+import styles from './app.css';
 
 
 export default ({ children }) => (
-    <div className="app">
+    <div className={styles.app}>
         <div>
-            <div className="appNavigationBar">
+            <div className={styles.navigationBar}>
                 <Link to="/">Home</Link>
                 <Link to="/about">About</Link>
                 <Link to="/user">User</Link>
             </div>
-            <div className="appBody">
+            <div className={styles.body}>
                 { children }
             </div>
         </div>

@@ -6,19 +6,19 @@ html, body {
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
-.appNavigationBar {
+.navigationBar {
     background: steelblue;
     padding: 25px 30px;
 }
 
-.appNavigationBar a {
+.navigationBar a {
     display: inline-block;
     margin-right: 10px;
     color: white;
     text-decoration: none;
 }
 
-.appBody {
+.body {
     background: lightgray;
     min-height: 500px;
 }
