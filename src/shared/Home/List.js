@@ -3,15 +3,9 @@ import React from 'react';
 
 export default class List extends React.Component {
 
-    mouseDown = false;
-    mouseOver = false;
+    trackMouse = false;
     lastMouseX = null;
     positionX = null;
-
-    reset() {
-        this.mouseDown = false;
-        this.mouseOver = false;
-    }
 
     updatePosition(element, clientX) {
         // Calculate delta
@@ -57,66 +51,63 @@ export default class List extends React.Component {
         }
     }
 
-    swipe(element, data) {
-        if (this.positionX > element.parentNode.offsetWidth * 0.4) 
+    release(element, data) {
+        this.trackMouse = false;
+
+        if (this.positionX > element.parentNode.offsetWidth * 0.4)
         {
             window.requestAnimationFrame(() => this.leaveScreen(element));
             this.props.onRemove(data);
         }
         else 
         {
-            setTimeout(() => {
-                window.requestAnimationFrame(() => this.resetPosition(element));
-            }, 100);
+            window.requestAnimationFrame(() => this.resetPosition(element));
         }
     }
 
-    /**** Mouse events ****/
+    /************ Mouse handlers ************/
 
     handleMouseDown(event) {
         this.positionX = 0;
-        this.mouseDown = true;
+        this.trackMouse = true;
         this.lastMouseX = event.clientX;
     }
 
     handleMouseUp(event, data) {
         const element = event.currentTarget;
-        this.mouseDown = false;
-        this.swipe(element, data);
+        this.release(element, data);
     }
 
     handleMouseMove(event) {
         const element = event.currentTarget;
 
-        if (this.mouseDown && this.mouseOver)
+        if (this.trackMouse)
         {
             this.updatePosition(element, event.clientX);
         }
     }
 
     handleMouseEnter(event) {
-        this.mouseOver = true;
+        this.positionX = 0;
     }
 
     handleMouseLeave(event, data) {
-        console.log('leave')
         const element = event.currentTarget;
-        this.reset();
-        this.swipe(element, data);
+        this.release(element, data);
     }
 
-    /**** Touch events ****/
+    /************ Touch handlers ************/
 
     handleTouchStart(event) {
         const element = event.currentTarget;
-        this.mouseDown = true;
+        this.trackMouse = true;
         this.positionX = 0;
         this.lastMouseX = event.clientX || event.touches[0].clientX;
     }
 
     handleTouchMove(event) {
         const element = event.currentTarget;
-        if (this.mouseDown)
+        if (this.trackMouse)
         {
             this.updatePosition(element, event.clientX || event.touches[0].clientX);
         }
@@ -124,8 +115,7 @@ export default class List extends React.Component {
 
     handleTouchEnd(event) {
         const element = event.currentTarget;
-        this.mouseDown = false;
-        this.swipe(element);
+        this.release(element);
     }
 
     render() {
