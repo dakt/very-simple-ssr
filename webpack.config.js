@@ -26,7 +26,7 @@ const client = {
                 exclude: /node_modules/,
                 use: ExtractTextPlugin.extract({
                     fallback: 'style-loader',
-                    use: 'css-loader?modules'
+                    use: 'css-loader?modules&localIdentName=[hash:base64:5]_[local]'
                 })
             }
         ]
@@ -62,7 +62,7 @@ const server = {
                 exclude: /node_modules/,
                 use: ExtractTextPlugin.extract({
                     fallback: 'style-loader',
-                    use: 'css-loader?modules'
+                    use: 'css-loader?modules&localIdentName=[hash:base64:5]_[local]'
                 })
             }
         ]

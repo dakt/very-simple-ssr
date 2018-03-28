@@ -1,6 +1,5 @@
 .container {
     display: flex;
-    position: relative;
     background: #fff;
     border-bottom: 1px solid lightgray;
     cursor: pointer;

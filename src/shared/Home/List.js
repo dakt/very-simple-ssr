@@ -7,33 +7,38 @@ export default class List extends React.Component {
     lastMouseX = null;
     positionX = null;
 
-    repositionNodesBelow(element, data) {
-
-        let isBelow = false;
-        this.list.childNodes.forEach(node => {
-            if (node === element) 
-            {
-                isBelow = true;
-            }
-            else if (isBelow)
-            {
-                window.requestAnimationFrame(() => this.moveUp(node, data, 1))        
-            }
-        });
+    handleSlideUpAnimationComplete(event) {
+        const node = event.target;
+        node.removeEventListener('transitionend', this.handleSlideUpAnimationComplete);
+        node.style.transition = '';
+        node.style.transform = '';
     }
 
-    moveUp(element, data, step) {
-        const pixelOffset = step * 8;
-        element.style.transform = `translateY(${-pixelOffset}px)`;
+    repositionNodesBelow(element, data) {
+        const allNodes = [...this.list.childNodes];
+        const nodeIndex = allNodes.findIndex(node => node === element) + 1;
 
-        if (pixelOffset <= element.offsetHeight)
-        {
-            window.requestAnimationFrame(() => this.moveUp(element, data, ++step));
+        // Remove node in order to trigger nodes below to reposition
+        this.list.removeChild(element);
+
+        // For every node below...
+        for (let i = nodeIndex; i < allNodes.length; i++) {
+            const node = allNodes[i];
+
+            // Freeze node in place
+            node.addEventListener('transitionend', this.handleSlideUpAnimationComplete);
+            node.style.transform = `translateY(98px)`;
         }
-        else
-        {
-            //this.props.onRemove(data);
-        }
+
+        // Wait for next repaint (next frame) to start animation
+        window.requestAnimationFrame(() => {
+            for (let i = nodeIndex; i < allNodes.length; i++) {
+                const node = allNodes[i];
+
+                node.style.transition = 'transform 300ms';
+                node.style.transform = null
+            }
+        });
     }
 
     updatePosition(element, clientX) {
@@ -80,7 +85,6 @@ export default class List extends React.Component {
         }
         else
         {
-            //this.list.removeChild(element);
             this.repositionNodesBelow(element, data);
         }
     }
@@ -152,7 +156,7 @@ export default class List extends React.Component {
         console.log('render');
 
         return (
-            <div style={{ overflowX: "hidden" }} ref={node => this.list = node}>
+            <div style={{ overflow: "hidden" }} ref={node => this.list = node}>
                 {this.props.data.map(d => (
                     <div
                         key={d[this.props.idField]}
