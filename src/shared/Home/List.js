@@ -9,12 +9,6 @@ export default class List extends React.Component {
     lastMouseX = null;
     positionX = null;
 
-    constructor(props) {
-        super(props);
-
-        this.handleSlideUpAnimationComplete = this.handleSlideUpAnimationComplete.bind(this);
-    }
-
     handleSlideUpAnimationComplete(event) {
         const node = event.target;
         node.removeEventListener('transitionend', this.handleSlideUpAnimationComplete);
