@@ -1,7 +1,7 @@
 import React from 'react';
 import cx from 'classnames';
 
-import Check from './Check';
+import Check from '../components/Check';
 import styles from './UserCard.css';
 
 

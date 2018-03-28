@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import List from './List';
+import List from '../components/List';
 import UserCard from './UserCard';
 import styles from './Home.css';
 
