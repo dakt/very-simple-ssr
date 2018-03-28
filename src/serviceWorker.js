@@ -22,10 +22,8 @@ self.addEventListener('install', event => {
     // );    
 });
 
-self.addEventListener('activate', event => {
-
+self.addEventListener('activate', (event) => {
     console.log('Active:', event);
-
 });
 
 self.addEventListener('fetch', (event) => {
@@ -33,10 +31,10 @@ self.addEventListener('fetch', (event) => {
     /* Ignore non-GET requests */
     if (event.request.method !== 'GET') return;
 
-    event.respondWith(new Promise(resolve => {
+    event.respondWith(new Promise((resolve) => {
 
-        const cache = caches.open(CACHE_NAME).then(cache => {
-            cache.match(event.request).then(cachedResponse => {
+        const cache = caches.open(CACHE_NAME).then((cache) => {
+            cache.match(event.request).then((cachedResponse) => {
                 if (cachedResponse) {
                     console.log('FROM CACHE', event.request.url);
                     event.waitUntil(cache.add(event.request));
@@ -49,7 +47,7 @@ self.addEventListener('fetch', (event) => {
                     // to clone the response.
                     const fetchRequest = event.request.clone();
 
-                    resolve(fetch(fetchRequest).then(response => {
+                    resolve(fetch(fetchRequest).then((response) => {
 
                         console.log('GOT DATA FOR', event.request.url);
 

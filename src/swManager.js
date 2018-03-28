@@ -1,10 +1,12 @@
 
-export function register(url) {
+function register(url) {
     navigator.serviceWorker.register(url)
-        .then(registration => {
+        .then((registration) => {
             console.log('Registration successful, scope is:', registration.scope);
         })
-        .catch(error => {
+        .catch((error) => {
             console.log(error);
         });
 }
+
+export { register };

@@ -9,10 +9,10 @@ import { createMemoryHistory } from 'history';
 import App from './shared/App';
 import routes from './shared/routes';
 import NotFound from './shared/404';
-import { configureStore } from './shared/redux';
+import { configureStore } from './shared/store';
 
 
-function renderToHTML(Element, initialProps) { 
+function renderToHTML(Element, initialProps) {
     const html = ReactDOMServer.renderToString(Element);
 
     return `<!DOCTYPE html>
@@ -52,15 +52,18 @@ app.get('/*', async (req, res) => {
         return found ? route : acc;
     }, null);
 
-    match === null && (match = { component: NotFound });
+    if (match === null) {
+        match = { component: NotFound };
+    }
 
-    match.component.getInitialData && 
-        await match.component.getInitialData({ 
-            ...req, 
+    if (match.component.getInitialData) {
+        await match.component.getInitialData({
+            ...req,
             dispatch: store.dispatch,
             getState: store.getState,
             isServer: true,
         });
+    }
 
     const Component = (
         <Provider store={store}>

@@ -1,10 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import styles from './List.css';
 
 
 export default class List extends React.Component {
-
     trackMouse = false;
     lastMouseX = null;
     positionX = null;
@@ -21,10 +21,10 @@ export default class List extends React.Component {
         const nodeIndex = allNodes.findIndex(node => node === element) + 1;
 
         // Hide node in order to trigger nodes below to reposition
-        element.style = "display: none";
+        element.style = 'display: none';
 
         // For every node below...
-        for (let i = nodeIndex; i < allNodes.length; i++) {
+        for (let i = nodeIndex; i < allNodes.length; i += 1) {
             const node = allNodes[i];
 
             // Freeze node in place
@@ -34,11 +34,11 @@ export default class List extends React.Component {
 
         // Wait for next repaint (next frame) to start animation
         window.requestAnimationFrame(() => {
-            for (let i = nodeIndex; i < allNodes.length; i++) {
+            for (let i = nodeIndex; i < allNodes.length; i += 1) {
                 const node = allNodes[i];
 
                 node.style.transition = 'transform 300ms';
-                node.style.transform = null
+                node.style.transform = null;
             }
 
             // We are done and ready for rerender
@@ -67,12 +67,9 @@ export default class List extends React.Component {
 
         element.style.transform = `translateX(${this.positionX}px)`;
 
-        if (this.positionX > 0.1 || this.positionX < -0.1)
-        {
+        if (this.positionX > 0.1 || this.positionX < -0.1) {
             window.requestAnimationFrame(() => this.resetPosition(element));
-        }
-        else
-        {
+        } else {
             this.positionX = 0;
             element.removeAttribute('style');
         }
@@ -84,12 +81,9 @@ export default class List extends React.Component {
 
         element.style.transform = `translateX(${this.positionX}px)`;
 
-        if (this.positionX < document.documentElement.clientWidth)
-        {
+        if (this.positionX < document.documentElement.clientWidth) {
             window.requestAnimationFrame(() => this.leaveScreen(element, data));
-        }
-        else
-        {
+        } else {
             this.repositionNodesBelow(element, data);
         }
     }
@@ -97,17 +91,14 @@ export default class List extends React.Component {
     release(element, data) {
         this.trackMouse = false;
 
-        if (this.positionX > element.parentNode.offsetWidth * 0.4)
-        {
+        if (this.positionX > element.parentNode.offsetWidth * 0.4) {
             window.requestAnimationFrame(() => this.leaveScreen(element, data));
-        }
-        else 
-        {
+        } else {
             window.requestAnimationFrame(() => this.resetPosition(element));
         }
     }
 
-    /************ Mouse handlers ************/
+    /* *********** Mouse handlers *********** */
 
     handleMouseDown(event) {
         this.positionX = 0;
@@ -122,22 +113,21 @@ export default class List extends React.Component {
 
     handleMouseMove(event) {
         const element = event.currentTarget;
-        this.trackMouse && this.updatePosition(element, event.clientX);
+        if (this.trackMouse) this.updatePosition(element, event.clientX);
     }
 
-    handleMouseEnter(event) {
+    handleMouseEnter() {
         this.positionX = 0;
     }
 
     handleMouseLeave(event, data) {
         const element = event.currentTarget;
-        this.trackMouse && this.release(element, data);
+        if (this.trackMouse) this.release(element, data);
     }
 
-    /************ Touch handlers ************/
+    /* *********** Touch handlers *********** */
 
     handleTouchStart(event) {
-        const element = event.currentTarget;
         this.trackMouse = true;
         this.positionX = 0;
         this.lastMouseX = event.clientX || event.touches[0].clientX;
@@ -145,8 +135,7 @@ export default class List extends React.Component {
 
     handleTouchMove(event) {
         const element = event.currentTarget;
-        if (this.trackMouse)
-        {
+        if (this.trackMouse) {
             this.updatePosition(element, event.clientX || event.touches[0].clientX);
         }
     }
@@ -158,7 +147,7 @@ export default class List extends React.Component {
 
     render() {
         return (
-            <div className={styles.container} ref={node => this.list = node}>
+            <div className={styles.container} ref={(node) => { this.list = node; }}>
                 {this.props.data.map(d => (
                     <div
                         className={styles.item}
@@ -183,6 +172,18 @@ export default class List extends React.Component {
 }
 
 List.defaultProps = {
-    idField: "id",
+    idField: 'id',
     onRemove: f => f,
+    children: null,
+    data: [],
+};
+
+List.propTypes = {
+    children: PropTypes.func,
+    onRemove: PropTypes.func,
+    idField: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number,
+    ]),
+    data: PropTypes.arrayOf(PropTypes.object),
 };

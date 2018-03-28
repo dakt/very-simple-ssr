@@ -18,12 +18,13 @@ const rootReducer = combineReducers({
 });
 
 function isClient() {
-    return typeof window !== "undefined" && window.document;
+    return typeof window !== 'undefined' && window.document;
 }
 
-export function configureStore(history) {
-
-    const composeEnhancers = isClient() ? (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose) : compose;
+function configureStore(history) {
+    const composeEnhancers = isClient()
+        ? (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose)
+        : compose;
 
     const middlewares = [];
 
@@ -32,12 +33,10 @@ export function configureStore(history) {
     const store = createStore(
         rootReducer,
         initialState,
-        composeEnhancers(
-            applyMiddleware(...middlewares),
-        )
+        composeEnhancers(applyMiddleware(...middlewares)),
     );
 
-    history.listen((location, action) => {
+    history.listen((location) => {
         store.dispatch({
             type: 'ROUTE_CHANGED',
             payload: {
@@ -54,8 +53,10 @@ export function configureStore(history) {
             ...history.location,
             qs: qs.parse(history.location.search),
             type: 'SERVER',
-        }
+        },
     });
 
     return store;
-}
+};
+
+export { configureStore };

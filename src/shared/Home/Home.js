@@ -14,9 +14,9 @@ export class GistList extends React.Component {
             gist: { pagination },
         } = getState();
 
-        const page  = qs.page ? qs.page : pagination.page;
+        const page = qs.page ? qs.page : pagination.page;
         const limit = qs.limit ? qs.limit : pagination.limit;
-        const url   = `https://jsonplaceholder.typicode.com/users?_page=${page}&_limit=${limit}`;
+        const url = `https://jsonplaceholder.typicode.com/users?_page=${page}&_limit=${limit}`;
 
         try {
             dispatch({ type: 'GET_DATA_REQUEST' });
@@ -35,7 +35,7 @@ export class GistList extends React.Component {
     }
 
     handleClick() {
-
+        console.log('View item');
     }
 
     handleChecked(event, data) {
@@ -49,19 +49,18 @@ export class GistList extends React.Component {
     render() {
         return (
             <div>
-                <div className={styles.navigation}>
-                </div>
+                <div className={styles.navigation} />
                 <List
                     data={this.props.data}
                     loading={this.props.loading}
-                    onRemove={(data) => this.handleRemoveItem(data)}
+                    onRemove={data => this.handleRemoveItem(data)}
                 >
                     {
                         data => (
                             <UserCard
                                 data={data}
                                 onClick={() => this.handleClick()}
-                                onChecked={(e, data) => this.handleChecked(e, data)}
+                                onChecked={(e, d) => this.handleChecked(e, d)}
                                 checked={this.props.checked.includes(data.id)}
                             />
                         )
@@ -72,16 +71,19 @@ export class GistList extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     loading: state.gist.loading,
     data: state.gist.data,
     checked: state.gist.checked,
     pagination: state.gist.pagination,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-    toggleCheck: (id) => dispatch({ type: "GIST_CHECK", payload: { id } }),
-    remove: (id) => dispatch({ type: 'GIST_DELETE_SUCCESS', payload: { id }}),
-})
+const mapDispatchToProps = dispatch => ({
+    toggleCheck: id => dispatch({ type: 'GIST_CHECK', payload: { id } }),
+    remove: id => dispatch({ type: 'GIST_DELETE_SUCCESS', payload: { id }}),
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(GistList);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(GistList);
