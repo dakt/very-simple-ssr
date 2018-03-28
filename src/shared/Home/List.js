@@ -152,9 +152,6 @@ export default class List extends React.Component {
     }
 
     render() {
-
-        console.log('render');
-
         return (
             <div style={{ overflow: "hidden" }} ref={node => this.list = node}>
                 {this.props.data.map(d => (
