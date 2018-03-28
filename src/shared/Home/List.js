@@ -1,5 +1,7 @@
 import React from 'react';
 
+import styles from './List.css';
+
 
 export default class List extends React.Component {
 
@@ -153,9 +155,10 @@ export default class List extends React.Component {
 
     render() {
         return (
-            <div style={{ overflow: "hidden" }} ref={node => this.list = node}>
+            <div className={styles.container} ref={node => this.list = node}>
                 {this.props.data.map(d => (
                     <div
+                        className={styles.item}
                         key={d[this.props.idField]}
                         /** Mouse events */
                         onMouseDown={(e) => this.handleMouseDown(e, d)}
