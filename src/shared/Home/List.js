@@ -9,6 +9,12 @@ export default class List extends React.Component {
     lastMouseX = null;
     positionX = null;
 
+    constructor(props) {
+        super(props);
+
+        this.handleSlideUpAnimationComplete = this.handleSlideUpAnimationComplete.bind(this);
+    }
+
     handleSlideUpAnimationComplete(event) {
         const node = event.target;
         node.removeEventListener('transitionend', this.handleSlideUpAnimationComplete);
@@ -20,8 +26,8 @@ export default class List extends React.Component {
         const allNodes = [...this.list.childNodes];
         const nodeIndex = allNodes.findIndex(node => node === element) + 1;
 
-        // Remove node in order to trigger nodes below to reposition
-        this.list.removeChild(element);
+        // Hide node in order to trigger nodes below to reposition
+        element.style = "display: none";
 
         // For every node below...
         for (let i = nodeIndex; i < allNodes.length; i++) {
@@ -40,6 +46,8 @@ export default class List extends React.Component {
                 node.style.transition = 'transform 300ms';
                 node.style.transform = null
             }
+
+            this.props.onRemove(data);
         });
     }
 
