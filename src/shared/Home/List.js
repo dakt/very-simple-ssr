@@ -29,7 +29,7 @@ export default class List extends React.Component {
 
             // Freeze node in place
             node.addEventListener('transitionend', this.handleSlideUpAnimationComplete);
-            node.style.transform = `translateY(98px)`;
+            node.style.transform = `translateY(${node.offsetHeight}px)`;
         }
 
         // Wait for next repaint (next frame) to start animation
@@ -41,6 +41,7 @@ export default class List extends React.Component {
                 node.style.transform = null
             }
 
+            // We are done and ready for rerender
             this.props.onRemove(data);
         });
     }
