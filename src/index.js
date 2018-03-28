@@ -12,7 +12,7 @@ import * as SwManager from './swManager';
 
 const history = createBrowserHistory();
 const store = configureStore(history);
-//SwManager.register('serviceWorker.js');
+SwManager.register('serviceWorker.js');
 
 ReactDOM.hydrate(
     <Provider store={store}>

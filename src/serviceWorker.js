@@ -7,19 +7,16 @@ const urlsToCache = [
 ];
 
 /*
- * Invoked on first download or when downloaded file is 
+ * Invoked on first download or when downloaded file is
  * found to be new byte-wise.
  */
-self.addEventListener('install', event => {
-    
+self.addEventListener('install', (event) => {
     console.log('Installing service worker');
 
-    // event.waitUntil(
-    //     caches.open(CACHE_NAME)
-    //         .then(cache => {
-    //             return cache.addAll(urlsToCache);
-    //         })
-    // );    
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then(cache => cache.addAll(urlsToCache)),
+    );
 });
 
 self.addEventListener('activate', (event) => {
@@ -33,14 +30,12 @@ self.addEventListener('fetch', (event) => {
 
     event.respondWith(new Promise((resolve) => {
 
-        const cache = caches.open(CACHE_NAME).then((cache) => {
+        caches.open(CACHE_NAME).then((cache) => {
             cache.match(event.request).then((cachedResponse) => {
                 if (cachedResponse) {
-                    console.log('FROM CACHE', event.request.url);
                     event.waitUntil(cache.add(event.request));
                     resolve(cachedResponse);
                 } else {
-                    console.log('NEED TO CACHE');
                     // IMPORTANT: Clone the request. A request is a stream and
                     // can only be consumed once. Since we are consuming this
                     // once by cache and once by the browser for fetch, we need
@@ -49,12 +44,10 @@ self.addEventListener('fetch', (event) => {
 
                     resolve(fetch(fetchRequest).then((response) => {
 
-                        console.log('GOT DATA FOR', event.request.url);
-
                         // Check if we received a valid response
-                        // if (!response || response.status !== 200 || response.type !== 'basic') {
-                        //     return response;
-                        // }
+                        if (!response || response.status !== 200 || response.type !== 'basic') {
+                            return response;
+                        }
 
                         // IMPORTANT: Clone the response. A response is a stream
                         // and because we want the browser to consume the response
@@ -63,13 +56,10 @@ self.addEventListener('fetch', (event) => {
                         const responseToCache = response.clone();
                         cache.put(event.request, responseToCache);
 
-                        console.log(cache);
-
                         return response;
                     }));
                 }
             });
         });
     }));
-
 });

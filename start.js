@@ -1,35 +1,34 @@
+require('babel-polyfill');
 const webpack = require('webpack');
 const MemoryFS = require('memory-fs');
 const path = require('path');
 const Module = require('module');
-require('babel-polyfill');
-
-
 const config = require('./webpack.config');
-const [ clientConfig, serverConfig ] = config;
+
+const [clientConfig, serverConfig] = config;
 const clientCompiler = webpack(clientConfig);
 const serverCompiler = webpack(serverConfig);
 const fs = new MemoryFS();
 let server = null;
 
 clientCompiler.watch({
-
+    ignored: /node_modules/,
 }, (err, stats) => {
 
     console.log('Watching client files');
 });
 
 serverCompiler.outputFileSystem = fs;
+
 serverCompiler.watch({
-
+    ignored: /node_modules/,
 }, (err, stats) => {
-
     const content = fs.readFileSync(
         path.resolve(
             serverConfig.output.path,
-            serverConfig.output.filename
+            serverConfig.output.filename,
         ),
-        'utf8'
+        'utf8',
     );
 
     const serverModule = new Module();

@@ -20,12 +20,14 @@ function renderToHTML(Element, initialProps) {
     <head>
         <title>SSR</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
         <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
-        <script defer type="text/javascript" src="vendors~bundle.js"></script>
-        <script defer type="text/javascript" src="bundle.js"></script>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet">
         <link rel="stylesheet" href="styles.css">
+
+        <script defer type="text/javascript" src="vendors~bundle.js"></script>
+        <script defer type="text/javascript" src="bundle.js"></script>
     </head>
     <body>
         <div id="root">${html}</div>
