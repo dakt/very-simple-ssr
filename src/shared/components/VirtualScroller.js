@@ -27,6 +27,10 @@ export default class VirtualScroller extends React.Component {
         this.attachScrollHandler();
     }
 
+    componentWillUnmount() {
+        this.detachScrollHandler();
+    }
+
     attachScrollHandler() {
         window.addEventListener('scroll', this.handleScroll, true);
         window.addEventListener('mousewheel', this.handleScroll, true);

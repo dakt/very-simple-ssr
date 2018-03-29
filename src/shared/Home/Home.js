@@ -81,7 +81,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    toggleCheck: id => dispatch({ type: 'ENTITY_CHECK', payload: { id } }),
+    toggleCheck: id => dispatch(Actions.entityCheck(id)),
     remove: id => dispatch(Actions.deleteEntity(id)),
     loadMore: () => dispatch(Actions.loadMore()),
 });

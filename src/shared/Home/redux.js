@@ -9,13 +9,13 @@ const INITIAL_STATE = {
     pagination: {
         page: 1,
         count: 0,
-        limit: 10,
+        limit: 20,
     },
 };
 
 function entitiesReducer(state = INITIAL_STATE, action) {
     switch (action.type) {
-    case 'LOAD_MORE_REQUEST':
+    //case 'LOAD_MORE_REQUEST':
     case 'GET_ENTITIES_REQUEST': {
         return {
             ...state,
@@ -104,6 +104,10 @@ function deleteEntityFailure() {
     return { type: 'DELETE_ENTITIY_FAILURE' };
 }
 
+function entityCheck(id) {
+    return { type: 'ENTITY_CHECK', payload: { id } };
+}
+
 const loadMore = () => async (dispatch, getState) => {
     const store = getState();
     const { page, limit } = store.entities.pagination;
@@ -141,6 +145,7 @@ const Actions = {
     getEntitiesSuccess,
     getEntitiesFailure,
     deleteEntity,
+    entityCheck,
     loadMore,
 };
 
