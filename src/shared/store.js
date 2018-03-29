@@ -1,4 +1,5 @@
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
+import thunk from 'redux-thunk';
 import qs from 'query-string';
 
 import gistReducer from './Home/redux';
@@ -26,7 +27,7 @@ function configureStore(history) {
         ? (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose)
         : compose;
 
-    const middlewares = [];
+    const middlewares = [thunk];
 
     const initialState = isClient() ? window.__INITIAL_STATE__ : {};
 

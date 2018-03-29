@@ -11,7 +11,6 @@ function getDocumentHeight() {
     );
 }
 
-
 export default class VirtualScroller extends React.Component {
 
     constructor(props) {
@@ -21,6 +20,10 @@ export default class VirtualScroller extends React.Component {
     }
 
     componentDidMount() {
+        this.attachScrollHandler();
+    }
+
+    componentDidUpdate() {
         this.attachScrollHandler();
     }
 
@@ -58,8 +61,7 @@ export default class VirtualScroller extends React.Component {
             </div>
         );
     }
-};
-
+}
 
 VirtualScroller.defaultProps = {
     threshold: 80,

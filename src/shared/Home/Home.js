@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import List from '../components/List';
 import UserCard from './UserCard';
+import { Actions } from './redux';
 import styles from './Home.css';
 
 
@@ -82,7 +83,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     toggleCheck: id => dispatch({ type: 'GIST_CHECK', payload: { id } }),
     remove: id => dispatch({ type: 'GIST_DELETE_SUCCESS', payload: { id } }),
-    loadMore: () => console.log('LOAD MORE'),
+    loadMore: () => dispatch(Actions.loadMore()),
 });
 
 export default connect(

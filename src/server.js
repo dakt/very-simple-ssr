@@ -16,7 +16,7 @@ import { configureStore } from './shared/store';
 function generateFakeData() {
     const data = [];
 
-    for (let i = 0; i <= 100; i += 1) {
+    for (let i = 0; i < 100; i += 1) {
         data.push({
             id: faker.random.uuid(),
             firstName: faker.name.firstName(),
@@ -64,6 +64,10 @@ app.use(express.static('dist'));
 app.get('/api/users', async (req, res) => {
     const { page, limit } = req.query;
     const responseData = FAKE_DATA.slice((page - 1) * limit, page * limit);
+
+    res.setHeader('x-total-count', FAKE_DATA.length);
+    res.setHeader('x-page', page);
+    res.setHeader('x-limit', limit);
 
     res.send(responseData);
 });

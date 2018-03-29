@@ -1,4 +1,6 @@
 
+/* *************** Reducers *************** */
+
 const INITIAL_STATE = {
     loading: false,
     data: [],
@@ -23,6 +25,12 @@ function gistReducer(state = INITIAL_STATE, action) {
         };
     case 'GET_DATA_FAILURE':
         return { ...state, loading: false };
+    case 'LOAD_MORE_SUCCESS':
+        return {
+            ...state,
+            data: [...state.data, ...action.payload.data],
+            pagination: action.payload.pagination,
+        };
     case 'GIST_CHECK':
         return {
             ...state,
@@ -43,4 +51,34 @@ function gistReducer(state = INITIAL_STATE, action) {
     }
 }
 
+/* *************** Actions *************** */
+
+const loadMore = () => async (dispatch, getState) => {
+    const store = getState();
+    const { page, limit } = store.gist.pagination;
+    const nextPage = page + 1;
+    const url = `http://localhost:3000/api/users?page=${nextPage}&limit=${limit}`;
+
+    dispatch({ type: 'LOAD_MORE_REQUEST' });
+
+    try {
+        const response = await fetch(url);
+        const count = response.headers.get('x-total-count');
+        const payload = {
+            data: await response.json(),
+            pagination: { page: nextPage, limit, count },
+        };
+
+        dispatch({ type: 'LOAD_MORE_SUCCESS', payload });
+    } catch (error) {
+        dispatch({ type: 'LOAD_MORE_FAILURE' });
+    }
+};
+
+
+const Actions = {
+    loadMore,
+};
+
 export default gistReducer;
+export { Actions };
