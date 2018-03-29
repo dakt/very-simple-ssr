@@ -13,6 +13,9 @@ const UserCard = ({ onChecked, data, checked }) => (
                 checked={checked}
                 onClick={e => onChecked(e, data)}
             />
+            <div className={styles.avatar}>
+                <img src={data.avatar} alt="avatar" />
+            </div>
         </div>
         <div className={styles.body}>
             <div>{data.firstName}</div>
@@ -30,7 +33,8 @@ UserCard.defaultProps = {
 
 UserCard.propTypes = {
     data: PropTypes.oneOfType([
-        PropTypes.object, PropTypes.any
+        PropTypes.object,
+        PropTypes.any,
     ]),
     checked: PropTypes.bool,
     onChecked: PropTypes.func,

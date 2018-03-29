@@ -2,7 +2,7 @@ import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 import qs from 'query-string';
 
-import gistReducer from './Home/redux';
+import entitiesReducer from './Home/redux';
 
 
 function routeReducer(state = {}, action) {
@@ -15,7 +15,7 @@ function routeReducer(state = {}, action) {
 
 const rootReducer = combineReducers({
     route: routeReducer,
-    gist: gistReducer,
+    entities: entitiesReducer,
 });
 
 function isClient() {
@@ -58,6 +58,6 @@ function configureStore(history) {
     });
 
     return store;
-};
+}
 
 export { configureStore };

@@ -1,3 +1,4 @@
+import ApiCall from '../utils/rest';
 
 /* *************** Reducers *************** */
 
@@ -12,26 +13,38 @@ const INITIAL_STATE = {
     },
 };
 
-function gistReducer(state = INITIAL_STATE, action) {
+function entitiesReducer(state = INITIAL_STATE, action) {
     switch (action.type) {
-    case 'GET_DATA_REQUEST':
-        return { ...state, loading: true };
-    case 'GET_DATA_SUCCESS':
+    case 'LOAD_MORE_REQUEST':
+    case 'GET_ENTITIES_REQUEST': {
+        return {
+            ...state,
+            loading: true,
+        };
+    }
+
+    case 'GET_ENTITIES_SUCCESS':
         return {
             ...state,
             loading: false,
             data: action.payload.data,
             pagination: action.payload.pagination,
         };
-    case 'GET_DATA_FAILURE':
+
+    case 'LOAD_MORE_FAILURE':
+    case 'GET_ENTITIES_FAILURE': {
         return { ...state, loading: false };
+    }
+
     case 'LOAD_MORE_SUCCESS':
         return {
             ...state,
+            loading: false,
             data: [...state.data, ...action.payload.data],
             pagination: action.payload.pagination,
         };
-    case 'GIST_CHECK':
+
+    case 'ENTITY_CHECK':
         return {
             ...state,
             checked: (
@@ -40,12 +53,14 @@ function gistReducer(state = INITIAL_STATE, action) {
                     : [...state.checked, action.payload.id]
             ),
         };
-    case 'GIST_DELETE_SUCCESS':
+
+    case 'ENTITY_DELETE_SUCCESS':
         return {
             ...state,
             data: state.data.filter(d => d.id !== action.payload.id),
             checked: state.checked.filter(id => id !== action.payload.id),
         };
+
     default:
         return state;
     }
@@ -53,32 +68,81 @@ function gistReducer(state = INITIAL_STATE, action) {
 
 /* *************** Actions *************** */
 
+function getEntitiesRequest() {
+    return { type: 'GET_ENTITIES_REQUEST' };
+}
+
+function getEntitiesSuccess(payload) {
+    return { type: 'GET_ENTITIES_SUCCESS', payload };
+}
+
+function getEntitiesFailure(error) {
+    return { type: 'GET_ENTITIES_FAILURE', error };
+}
+
+function loadMoreRequest() {
+    return { type: 'LOAD_MORE_REQUEST' };
+}
+
+function loadMoreSuccess(payload) {
+    return { type: 'LOAD_MORE_SUCCESS', payload };
+}
+
+function loadMoreFailure(error) {
+    return { type: 'LOAD_MORE_FAILURE', error };
+}
+
+function deleteEntityRequest() {
+    return { type: 'DELETE_ENTITIY_REQUEST' };
+}
+
+function deleteEntitySuccess() {
+    return { type: 'DELETE_ENTITIY_SUCCESS' };
+}
+
+function deleteEntityFailure() {
+    return { type: 'DELETE_ENTITIY_FAILURE' };
+}
+
 const loadMore = () => async (dispatch, getState) => {
     const store = getState();
-    const { page, limit } = store.gist.pagination;
+    const { page, limit } = store.entities.pagination;
     const nextPage = page + 1;
-    const url = `http://localhost:3000/api/users?page=${nextPage}&limit=${limit}`;
 
-    dispatch({ type: 'LOAD_MORE_REQUEST' });
+    dispatch(loadMoreRequest());
 
     try {
-        const response = await fetch(url);
-        const count = response.headers.get('x-total-count');
+        const response = await ApiCall(`/users?page=${nextPage}&limit=${limit}`).get();
+        const { data, count } = response;
         const payload = {
-            data: await response.json(),
+            data,
             pagination: { page: nextPage, limit, count },
         };
 
-        dispatch({ type: 'LOAD_MORE_SUCCESS', payload });
+        dispatch(loadMoreSuccess(payload));
     } catch (error) {
-        dispatch({ type: 'LOAD_MORE_FAILURE' });
+        dispatch(loadMoreFailure(error));
     }
 };
 
+const deleteEntity = id => async (dispatch) => {
+    dispatch(deleteEntityRequest());
+
+    try {
+        await ApiCall(`/users/${id}`).remove();
+        dispatch(deleteEntitySuccess());
+    } catch (error) {
+        dispatch(deleteEntityFailure(error));
+    }
+};
 
 const Actions = {
+    getEntitiesRequest,
+    getEntitiesSuccess,
+    getEntitiesFailure,
+    deleteEntity,
     loadMore,
 };
 
-export default gistReducer;
+export default entitiesReducer;
 export { Actions };

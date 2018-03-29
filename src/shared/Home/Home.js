@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import List from '../components/List';
 import UserCard from './UserCard';
 import { Actions } from './redux';
+import ApiCall from '../utils/rest';
 import styles from './Home.css';
 
 
@@ -12,26 +13,25 @@ export class GistList extends React.Component {
     static async getInitialData({ isServer, dispatch, getState }) {
         const {
             route: { qs },
-            gist: { pagination },
+            entities: { pagination },
         } = getState();
 
         const page = qs.page ? qs.page : pagination.page;
         const limit = qs.limit ? qs.limit : pagination.limit;
-        const url = `http://localhost:3000/api/users?page=${page}&limit=${limit}`;
 
         try {
-            dispatch({ type: 'GET_DATA_REQUEST' });
+            dispatch(Actions.getEntitiesRequest());
 
-            const response = await fetch(url);
-            const count = response.headers.get('x-total-count');
-            const payload = { 
-                data: await response.json(),
+            const response = await ApiCall(`/users?page=${page}&limit=${limit}`).get();
+            const { data, count } = response;
+            const payload = {
+                data,
                 pagination: { page, limit, count },
             };
 
-            dispatch({ type: 'GET_DATA_SUCCESS', payload });
+            dispatch(Actions.getEntitiesSuccess(payload));
         } catch (error) {
-            dispatch({ type: 'GET_DATA_FAILURE', error });
+            dispatch(Actions.getEntitiesFailure(error));
         }
     }
 
@@ -74,15 +74,15 @@ export class GistList extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    loading: state.gist.loading,
-    data: state.gist.data,
-    checked: state.gist.checked,
-    pagination: state.gist.pagination,
+    loading: state.entities.loading,
+    data: state.entities.data,
+    checked: state.entities.checked,
+    pagination: state.entities.pagination,
 });
 
 const mapDispatchToProps = dispatch => ({
-    toggleCheck: id => dispatch({ type: 'GIST_CHECK', payload: { id } }),
-    remove: id => dispatch({ type: 'GIST_DELETE_SUCCESS', payload: { id } }),
+    toggleCheck: id => dispatch({ type: 'ENTITY_CHECK', payload: { id } }),
+    remove: id => dispatch(Actions.deleteEntity(id)),
     loadMore: () => dispatch(Actions.loadMore()),
 });
 

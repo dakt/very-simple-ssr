@@ -20,7 +20,13 @@
 
 .iconContainer i {
     color: #5f5f5f;
-    font-size: 3em;
+    font-size: 3.5em;
+}
+
+.avatar img {
+    height: 50px;
+    width: 50px;
+    border-radius: 25px;
 }
 
 .body {

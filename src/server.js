@@ -57,19 +57,53 @@ function renderToHTML(Element, initialProps) {
 }
 
 const app = express();
-const FAKE_DATA = generateFakeData();
+let FAKE_DATA = generateFakeData();
 
 app.use(express.static('dist'));
 
 app.get('/api/users', async (req, res) => {
-    const { page, limit } = req.query;
-    const responseData = FAKE_DATA.slice((page - 1) * limit, page * limit);
+    try {
+        const { page, limit } = req.query;
+        const responseData = FAKE_DATA.slice((page - 1) * limit, page * limit);
 
-    res.setHeader('x-total-count', FAKE_DATA.length);
-    res.setHeader('x-page', page);
-    res.setHeader('x-limit', limit);
+        res.setHeader('x-total-count', FAKE_DATA.length);
+        res.setHeader('x-page', page);
+        res.setHeader('x-limit', limit);
 
-    res.send(responseData);
+        res
+            .status(200)
+            .send({
+                message: 'OK',
+                data: responseData,
+            });
+    } catch (error) {
+        res
+            .status(500)
+            .send({
+                message: 'SERVER_ERROR',
+            });
+    }
+});
+
+app.delete('/api/users/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        FAKE_DATA = FAKE_DATA.filter(data => data.id !== id);
+
+        res
+            .status(204)
+            .send({
+                data: id,
+                message: 'RESOURCE_DELETED',
+            });
+    } catch (error) {
+        res
+            .status(500)
+            .send({
+                message: 'SERVER_ERROR',
+            });
+    }
 });
 
 app.get('/*', async (req, res) => {
