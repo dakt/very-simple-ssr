@@ -18,6 +18,7 @@ function generateFakeData() {
 
     for (let i = 0; i <= 100; i += 1) {
         data.push({
+            id: faker.random.uuid(),
             firstName: faker.name.firstName(),
             lastName: faker.name.lastName(),
             email: faker.internet.email(),
@@ -61,7 +62,10 @@ const FAKE_DATA = generateFakeData();
 app.use(express.static('dist'));
 
 app.get('/api/users', async (req, res) => {
-    res.send({ data: FAKE_DATA });
+    const { page, limit } = req.query;
+    const responseData = FAKE_DATA.slice((page - 1) * limit, page * limit);
+
+    res.send(responseData);
 });
 
 app.get('/*', async (req, res) => {

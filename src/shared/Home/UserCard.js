@@ -15,22 +15,25 @@ const UserCard = ({ onChecked, data, checked }) => (
             />
         </div>
         <div className={styles.body}>
-            <div>{data.name}</div>
-            <div>{data.username}</div>
+            <div>{data.firstName}</div>
+            <div>{data.lastName}</div>
             <div>{data.email}</div>
         </div>
     </div>
 );
 
 UserCard.defaultProps = {
-    onChecked: f => f,
     data: {},
     checked: false,
+    onChecked: f => f,
 };
 
 UserCard.propTypes = {
-    onChecked: PropTypes.func,
+    data: PropTypes.oneOfType([
+        PropTypes.object, PropTypes.any
+    ]),
     checked: PropTypes.bool,
+    onChecked: PropTypes.func,
 };
 
 export default UserCard;

@@ -16,7 +16,7 @@ export class GistList extends React.Component {
 
         const page = qs.page ? qs.page : pagination.page;
         const limit = qs.limit ? qs.limit : pagination.limit;
-        const url = `https://jsonplaceholder.typicode.com/users?_page=${page}&_limit=${limit}`;
+        const url = `http://localhost:3000/api/users?page=${page}&limit=${limit}`;
 
         try {
             dispatch({ type: 'GET_DATA_REQUEST' });
