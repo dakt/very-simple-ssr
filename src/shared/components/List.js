@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import styles from './List.css';
+import VirtualScroller from '../components/VirtualScroller';
 
 
 export default class List extends React.Component {
@@ -147,26 +148,28 @@ export default class List extends React.Component {
 
     render() {
         return (
-            <div className={styles.container} ref={(node) => { this.list = node; }}>
-                {this.props.data.map(d => (
-                    <div
-                        className={styles.item}
-                        key={d[this.props.idField]}
-                        /** Mouse events */
-                        onMouseDown={(e) => this.handleMouseDown(e, d)}
-                        onMouseUp={(e) => this.handleMouseUp(e, d)}
-                        onMouseMove={(e) => this.handleMouseMove(e, d)}
-                        onMouseEnter={(e) => this.handleMouseEnter(e, d)}
-                        onMouseLeave={(e) => this.handleMouseLeave(e, d)}
-                        /** Touch events */
-                        onTouchStart={(e) => this.handleTouchStart(e, d)}
-                        onTouchEnd={(e) => this.handleTouchEnd(e, d)}
-                        onTouchMove={(e) => this.handleTouchMove(e, d)}
-                    >
-                        {this.props.children(d)}
-                    </div>
-                ))}
-            </div>
+            <VirtualScroller>
+                <div className={styles.container} ref={(node) => { this.list = node; }}>
+                    {this.props.data.map(d => (
+                        <div
+                            className={styles.item}
+                            key={d[this.props.idField]}
+                            /** Mouse events */
+                            onMouseDown={(e) => this.handleMouseDown(e, d)}
+                            onMouseUp={(e) => this.handleMouseUp(e, d)}
+                            onMouseMove={(e) => this.handleMouseMove(e, d)}
+                            onMouseEnter={(e) => this.handleMouseEnter(e, d)}
+                            onMouseLeave={(e) => this.handleMouseLeave(e, d)}
+                            /** Touch events */
+                            onTouchStart={(e) => this.handleTouchStart(e, d)}
+                            onTouchEnd={(e) => this.handleTouchEnd(e, d)}
+                            onTouchMove={(e) => this.handleTouchMove(e, d)}
+                        >
+                            {this.props.children(d)}
+                        </div>
+                    ))}
+                </div>
+            </VirtualScroller>
         );
     }
 }
