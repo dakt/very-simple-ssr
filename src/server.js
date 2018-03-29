@@ -1,5 +1,6 @@
 import 'isomorphic-fetch';
 import express from 'express';
+import faker from 'faker';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { matchPath, MemoryRouter as Router } from 'react-router';
@@ -11,6 +12,21 @@ import routes from './shared/routes';
 import NotFound from './shared/404';
 import { configureStore } from './shared/store';
 
+
+function generateFakeData() {
+    const data = [];
+
+    for (let i = 0; i <= 100; i += 1) {
+        data.push({
+            firstName: faker.name.firstName(),
+            lastName: faker.name.lastName(),
+            email: faker.internet.email(),
+            avatar: faker.image.avatar(),
+        });
+    }
+
+    return data;
+}
 
 function renderToHTML(Element, initialProps) {
     const html = ReactDOMServer.renderToString(Element);
@@ -40,8 +56,13 @@ function renderToHTML(Element, initialProps) {
 }
 
 const app = express();
+const FAKE_DATA = generateFakeData();
 
 app.use(express.static('dist'));
+
+app.get('/api/users', async (req, res) => {
+    res.send({ data: FAKE_DATA });
+});
 
 app.get('/*', async (req, res) => {
     console.log(req.method, req.path);
@@ -81,5 +102,6 @@ app.get('/*', async (req, res) => {
 
     res.send(renderToHTML(Component, intialState));
 });
+
 
 export default app;
