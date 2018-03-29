@@ -33,6 +33,12 @@ export default class VirtualScroller extends React.Component {
         this.detachScrollHandler();
     }
 
+    /*
+     * So far only in Chrome...
+     * Prevent scroll hiccup during page load when browser tries to
+     * restore the scroll on popState. This can cause unwanted event fireing
+     * as soon as we attach scroll handlers.
+     */
     preventScrollRestoration() {
         // https://developers.google.com/web/updates/2015/09/history-api-scroll-restoration
         // Maybe we should put this in header?
