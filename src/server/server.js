@@ -7,10 +7,10 @@ import { matchPath, MemoryRouter as Router } from 'react-router';
 import { Provider } from 'react-redux';
 import { createMemoryHistory } from 'history';
 
-import App from './shared/App';
-import routes from './shared/routes';
-import NotFound from './shared/404';
-import { configureStore } from './shared/store';
+import App from '../shared/App';
+import routes from '../shared/routes';
+import NotFound from '../shared/404';
+import { configureStore } from '../shared/store';
 
 
 function generateFakeData() {

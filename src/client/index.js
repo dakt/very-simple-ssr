@@ -4,9 +4,9 @@ import { Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';
 import { Route, Switch, Router } from 'react-router-dom';
 
-import App from './shared/App';
-import routes from './shared/routes';
-import { configureStore } from './shared/store';
+import App from '../shared/App';
+import routes from '../shared/routes';
+import { configureStore } from '../shared/store';
 import * as SwManager from './swManager';
 
 

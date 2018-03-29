@@ -7,12 +7,12 @@ const client = {
     target: 'web',
     devtool: 'source-map',
     entry: {
-        bundle: ['babel-polyfill', './src/index.js'],
-        serviceWorker: './src/serviceWorker.js',
+        bundle: ['babel-polyfill', './src/client/index.js'],
+        serviceWorker: './src/client/serviceWorker.js',
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: '[name].js'
+        filename: '[name].js',
     },
     module: {
         rules: [
@@ -27,24 +27,24 @@ const client = {
                 use: ExtractTextPlugin.extract({
                     fallback: 'style-loader',
                     use: 'css-loader?modules&localIdentName=[hash:base64:5]_[local]'
-                })
-            }
-        ]
+                }),
+            },
+        ],
     },
     optimization: {
         splitChunks: {
             chunks: 'all',
-        }
+        },
     },
     plugins: [
         new ExtractTextPlugin('styles.css'),
-    ]
+    ],
 };
 
 const server = {
     mode: 'development',
     target: 'node',
-    entry: ['./src/server.js'],
+    entry: ['./src/server/server.js'],
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'server.js',
@@ -63,13 +63,13 @@ const server = {
                 use: ExtractTextPlugin.extract({
                     fallback: 'style-loader',
                     use: 'css-loader?modules&localIdentName=[hash:base64:5]_[local]'
-                })
-            }
-        ]
+                }),
+            },
+        ],
     },
     plugins: [
         new ExtractTextPlugin('styles.css'),
-    ]
+    ],
 };
 
 module.exports = [client, server];
