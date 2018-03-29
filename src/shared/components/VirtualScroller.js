@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { setTimeout } from 'timers';
 
 
 function getDocumentHeight() {
@@ -20,6 +21,7 @@ export default class VirtualScroller extends React.Component {
     }
 
     componentDidMount() {
+        window.scrollTo(0, 0);
         this.attachScrollHandler();
     }
 

@@ -1,4 +1,5 @@
 import ApiCall from '../utils/rest';
+import { debug } from 'util';
 
 /* *************** Reducers *************** */
 
@@ -83,6 +84,10 @@ function loadMoreFailure(error) {
     return { type: 'LOAD_MORE_FAILURE', error };
 }
 
+function noMore() {
+    return { type: 'NO_MORE' };
+}
+
 function deleteEntityRequest() {
     return { type: 'DELETE_ENTITIY_REQUEST' };
 }
@@ -101,22 +106,22 @@ function entityCheck(id) {
 
 const loadMore = () => async (dispatch, getState) => {
     const store = getState();
-    const { page, limit } = store.entities.pagination;
+    let { page, limit, count } = store.entities.pagination;
 
     // If page is null it is a initial request done by the server
-    const nextPage = page === null ? 1 : page + 1;
+    page = page === null ? 1 : page + 1;
+
+    if (page !== 1 && page * limit > count) {
+        dispatch(noMore());
+        return;
+    }
 
     try {
         dispatch(loadMoreRequest());
-        const response = await ApiCall(`/users?page=${nextPage}&limit=${limit}`).get();
+        const response = await ApiCall(`/users?page=${page}&limit=${limit}`).get();
         const { data, count } = response;
 
-        if (data.length === 0) {
-            dispatch({ type: 'NO_MORE' });
-            return;
-        }
-
-        dispatch(loadMoreSuccess(data, nextPage, limit, count));
+        dispatch(loadMoreSuccess(data, page, limit, count));
     } catch (error) {
         dispatch(loadMoreFailure(error));
     }
