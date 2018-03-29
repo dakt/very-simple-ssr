@@ -148,7 +148,7 @@ export default class List extends React.Component {
 
     render() {
         return (
-            <VirtualScroller>
+            <VirtualScroller onNearEnd={this.props.onNearEnd}>
                 <div className={styles.container} ref={(node) => { this.list = node; }}>
                     {this.props.data.map(d => (
                         <div
@@ -175,18 +175,24 @@ export default class List extends React.Component {
 }
 
 List.defaultProps = {
-    idField: 'id',
-    onRemove: f => f,
     children: null,
+    idField: 'id',
     data: [],
+    onRemove: f => f,
+    onNearEnd: f => f,
 };
 
 List.propTypes = {
-    children: PropTypes.func,
-    onRemove: PropTypes.func,
+    children: PropTypes.oneOfType([
+        PropTypes.object,
+        PropTypes.array,
+        PropTypes.func,
+    ]),
     idField: PropTypes.oneOfType([
         PropTypes.string,
         PropTypes.number,
     ]),
     data: PropTypes.arrayOf(PropTypes.object),
+    onRemove: PropTypes.func,
+    onNearEnd: PropTypes.func,
 };

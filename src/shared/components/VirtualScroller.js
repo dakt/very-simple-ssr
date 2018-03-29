@@ -30,8 +30,8 @@ export default class VirtualScroller extends React.Component {
     }
 
     detachScrollHandler() {
-        window.removeEventListener('scroll', this.handleScroll);
-        window.removeEventListener('mousewheel', this.handleScroll);
+        window.removeEventListener('scroll', this.handleScroll, true);
+        window.removeEventListener('mousewheel', this.handleScroll, true);
     }
 
     handleScroll(event) {
