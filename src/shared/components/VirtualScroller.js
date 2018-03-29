@@ -21,7 +21,7 @@ export default class VirtualScroller extends React.Component {
     }
 
     componentDidMount() {
-        window.scrollTo(0, 0);
+        this.preventScrollRestoration();
         this.attachScrollHandler();
     }
 
@@ -31,6 +31,14 @@ export default class VirtualScroller extends React.Component {
 
     componentWillUnmount() {
         this.detachScrollHandler();
+    }
+
+    preventScrollRestoration() {
+        // https://developers.google.com/web/updates/2015/09/history-api-scroll-restoration
+        // Maybe we should put this in header?
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
     }
 
     attachScrollHandler() {
