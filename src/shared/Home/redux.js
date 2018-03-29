@@ -15,7 +15,7 @@ const INITIAL_STATE = {
 
 function entitiesReducer(state = INITIAL_STATE, action) {
     switch (action.type) {
-    //case 'LOAD_MORE_REQUEST':
+    case 'LOAD_MORE_REQUEST':
     case 'GET_ENTITIES_REQUEST': {
         return {
             ...state,

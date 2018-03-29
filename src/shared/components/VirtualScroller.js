@@ -32,8 +32,10 @@ export default class VirtualScroller extends React.Component {
     }
 
     attachScrollHandler() {
-        window.addEventListener('scroll', this.handleScroll, true);
-        window.addEventListener('mousewheel', this.handleScroll, true);
+        if (this.props.hasMore === false) {
+            window.addEventListener('scroll', this.handleScroll, true);
+            window.addEventListener('mousewheel', this.handleScroll, true);
+        }
     }
 
     detachScrollHandler() {
@@ -73,6 +75,7 @@ VirtualScroller.defaultProps = {
 };
 
 VirtualScroller.propTypes = {
+    hasMore: PropTypes.bool.isRequired,
     children: PropTypes.oneOfType([
         PropTypes.object,
         PropTypes.array,

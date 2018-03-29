@@ -148,7 +148,7 @@ export default class List extends React.Component {
 
     render() {
         return (
-            <VirtualScroller onNearEnd={this.props.onNearEnd}>
+            <VirtualScroller onNearEnd={this.props.onNearEnd} hasMore={this.props.loading}>
                 <div className={styles.container} ref={(node) => { this.list = node; }}>
                     {this.props.data.map(d => (
                         <div
