@@ -7,7 +7,11 @@ const INITIAL_STATE = {
     data: [],
     checked: [],
     pagination: {
-        page: 1,
+        /* 
+         * Null will be replaced by "1" after the server 
+         * completes initial request 
+         */
+        page: null,
         count: 0,
         limit: 20,
     },
@@ -15,13 +19,11 @@ const INITIAL_STATE = {
 
 function entitiesReducer(state = INITIAL_STATE, action) {
     switch (action.type) {
-    case 'LOAD_MORE_REQUEST':
-    case 'GET_ENTITIES_REQUEST': {
+    case 'GET_ENTITIES_REQUEST':
         return {
             ...state,
             loading: true,
         };
-    }
 
     case 'GET_ENTITIES_SUCCESS':
         return {
@@ -32,9 +34,7 @@ function entitiesReducer(state = INITIAL_STATE, action) {
         };
 
     case 'LOAD_MORE_FAILURE':
-    case 'GET_ENTITIES_FAILURE': {
         return { ...state, loading: false };
-    }
 
     case 'LOAD_MORE_SUCCESS':
         return {
@@ -68,24 +68,15 @@ function entitiesReducer(state = INITIAL_STATE, action) {
 
 /* *************** Actions *************** */
 
-function getEntitiesRequest() {
-    return { type: 'GET_ENTITIES_REQUEST' };
-}
-
-function getEntitiesSuccess(payload) {
-    return { type: 'GET_ENTITIES_SUCCESS', payload };
-}
-
-function getEntitiesFailure(error) {
-    return { type: 'GET_ENTITIES_FAILURE', error };
-}
-
 function loadMoreRequest() {
     return { type: 'LOAD_MORE_REQUEST' };
 }
 
-function loadMoreSuccess(payload) {
-    return { type: 'LOAD_MORE_SUCCESS', payload };
+function loadMoreSuccess(data, page, limit, count) {
+    return { 
+        type: 'LOAD_MORE_SUCCESS',
+        payload: { data, pagination: { page, limit, count } },
+    };
 }
 
 function loadMoreFailure(error) {
@@ -111,19 +102,21 @@ function entityCheck(id) {
 const loadMore = () => async (dispatch, getState) => {
     const store = getState();
     const { page, limit } = store.entities.pagination;
-    const nextPage = page + 1;
 
-    dispatch(loadMoreRequest());
+    // If page is null it is a initial request done by the server
+    const nextPage = page === null ? 1 : page + 1;
 
     try {
+        dispatch(loadMoreRequest());
         const response = await ApiCall(`/users?page=${nextPage}&limit=${limit}`).get();
         const { data, count } = response;
-        const payload = {
-            data,
-            pagination: { page: nextPage, limit, count },
-        };
 
-        dispatch(loadMoreSuccess(payload));
+        if (data.length === 0) {
+            dispatch({ type: 'NO_MORE' });
+            return;
+        }
+
+        dispatch(loadMoreSuccess(data, nextPage, limit, count));
     } catch (error) {
         dispatch(loadMoreFailure(error));
     }
@@ -141,9 +134,6 @@ const deleteEntity = id => async (dispatch) => {
 };
 
 const Actions = {
-    getEntitiesRequest,
-    getEntitiesSuccess,
-    getEntitiesFailure,
     deleteEntity,
     entityCheck,
     loadMore,
