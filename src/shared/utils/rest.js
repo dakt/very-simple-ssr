@@ -7,7 +7,7 @@ function doApiCall(url, method = 'GET') {
         method,
     };
 
-    return window.fetch(url, header)
+    return fetch(url, header)
         .then((response) => {
             structuredResponse = {
                 count: response.headers.get('x-total-count'),
