@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import cx from 'classnames';
 
+import { Selectors } from './redux';
 import Check from '../components/Check';
 import styles from './UserCard.css';
 
@@ -40,4 +42,8 @@ UserCard.propTypes = {
     onChecked: PropTypes.func,
 };
 
-export default UserCard;
+const mapStateToProps = (state, ownProps) => ({
+    checked: Selectors.isChecked(state, ownProps.data.id),
+});
+
+export default connect(mapStateToProps)(UserCard);

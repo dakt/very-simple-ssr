@@ -41,7 +41,6 @@ export class GistList extends React.Component {
                                 data={data}
                                 onClick={() => this.handleClick()}
                                 onChecked={(e, d) => this.handleChecked(e, d)}
-                                checked={this.props.checked.includes(data.id)}
                             />
                         )
                     }
@@ -52,9 +51,8 @@ export class GistList extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    loading: state.entities.loading,
+    loading: state.entities.data.loading,
     data: Selectors.getUsers(state),
-    checked: Selectors.getChecked(state),
     pagination: Selectors.getPagination(state),
 });
 

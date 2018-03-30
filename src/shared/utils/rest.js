@@ -20,7 +20,11 @@ function doApiCall(url, method = 'GET') {
         .then(json => ({
             ...structuredResponse,
             ...json,
-        }));
+        }))
+        .catch(error => {
+            //console.error(error);
+            throw new Error(error);
+        });
 }
 
 function get(resource) {

@@ -1,64 +1,10 @@
 import { combineReducers } from 'redux';
+import { normalize, schema } from 'normalizr';
+import { createSelector } from 'reselect';
 
 import ApiCall from '../utils/rest';
 
 /* *************** Reducers *************** */
-
-const INITIAL_STATE = {
-    loading: false,
-    data: [],
-    checked: [],
-    pagination: {
-        /*
-         * Null will be replaced by "1" after the server
-         * completes initial request
-         */
-        page: null,
-        count: 0,
-        limit: 20,
-    },
-};
-
-function entitiesReducer(state = INITIAL_STATE, action) {
-    switch (action.type) {
-    case 'LOAD_MORE_REQUEST':
-        return {
-            ...state,
-            loading: true,
-        };
-
-    case 'LOAD_MORE_SUCCESS':
-        return {
-            ...state,
-            loading: false,
-            data: [...state.data, ...action.payload.data],
-            pagination: action.payload.pagination,
-        };
-
-    case 'LOAD_MORE_FAILURE':
-        return { ...state, loading: false };
-
-    case 'ENTITY_CHECK':
-        return {
-            ...state,
-            checked: (
-                state.checked.includes(action.payload.id)
-                    ? state.checked.filter(id => id !== action.payload.id)
-                    : [...state.checked, action.payload.id]
-            ),
-        };
-
-    case 'ENTITY_DELETE_SUCCESS':
-        return {
-            ...state,
-            data: state.data.filter(d => d.id !== action.payload.id),
-            checked: state.checked.filter(id => id !== action.payload.id),
-        };
-
-    default:
-        return state;
-    }
-}
 
 function dataReducer(state = {
     loading: false,
@@ -66,24 +12,33 @@ function dataReducer(state = {
     ids: [],
 }, action) {
 
-    if (action.type === 'LOAD_MORE_SUCCESS') {
+    switch (action.type) {
+    case 'LOAD_MORE_REQUEST':
         return {
             ...state,
-            ids: action.payload.data,
+            loading: true,
+        }
+    case 'LOAD_MORE_SUCCESS':
+        return {
+            loading: false,
+            byId: { ...state.byId, ...action.payload.byId},
+            ids: [...state.ids, ...action.payload.ids],
         };
+    case 'LOAD_MORE_FAILURE':
+        return state;
+    default:
+        return state;
     }
-
-    return state;
 }
 
 function paginationReducer(state = {
     page: null,
-    limit: 10,
+    limit: 20,
     count: 0,
 }, action) {
 
     if (action.type === 'LOAD_MORE_SUCCESS') {
-        return state;
+        return action.payload.pagination;
     }
 
     return state;
@@ -92,24 +47,25 @@ function paginationReducer(state = {
 function checkedReducer(state = [], action) {
 
     if (action.type === 'ENTITY_CHECK') {
-        return state;
+        return state.includes(action.payload.id) 
+            ? state.filter(id => id !== action.payload.id)
+            : [...state, action.payload.id];
     }
 
     return state;
 }
 
+/* *************** Selectors *************** */
 
-export default combineReducers({
-    data: dataReducer,
-    pagination: paginationReducer,
-    checked: checkedReducer,
-});
-
+const getUsers = createSelector(
+    [state => state.entities.data.byId, state => state.entities.data.ids],
+    (byId, ids) => ids.map(id => byId[id])
+);
 
 const Selectors = {
-    getUsers: state => state.entities.data.ids,
+    getUsers,
     getPagination: state => state.entities.pagination,
-    getChecked: state => state.entities.checked,
+    isChecked: (state, id) => state.entities.checked.includes(id),
 };
 
 /* *************** Actions *************** */
@@ -119,9 +75,16 @@ function loadMoreRequest() {
 }
 
 function loadMoreSuccess(data, page, limit, count) {
+
+    const users = new schema.Entity('users');
+    const normalizedData = normalize(data, [users]);
+
+    const byId = normalizedData.entities.users;
+    const ids = normalizedData.result;
+
     return {
         type: 'LOAD_MORE_SUCCESS',
-        payload: { data, pagination: { page, limit, count } },
+        payload: { byId, ids, pagination: { page, limit, count } },
     };
 }
 
@@ -150,8 +113,8 @@ function entityCheck(id) {
 }
 
 const loadMore = () => async (dispatch, getState) => {
-    const store = getState();
-    let { page, limit, count } = store.entities.pagination;
+    const state = getState();
+    let { page, limit, count } = Selectors.getPagination(state);
 
     // If page is null it is a initial request done by the server
     page = page === null ? 1 : page + 1;
@@ -164,11 +127,10 @@ const loadMore = () => async (dispatch, getState) => {
     try {
         dispatch(loadMoreRequest());
         const response = await ApiCall(`/users?page=${page}&limit=${limit}`).get();
-        const { data, count } = response;
-
-        dispatch(loadMoreSuccess(data, page, limit, count));
+        dispatch(loadMoreSuccess(response.data, page, limit, response.count));
     } catch (error) {
         dispatch(loadMoreFailure(error));
+        console.error(error);
     }
 };
 
@@ -189,5 +151,10 @@ const Actions = {
     loadMore,
 };
 
-//export default entitiesReducer;
+export default combineReducers({
+    data: dataReducer,
+    pagination: paginationReducer,
+    checked: checkedReducer,
+});
+
 export { Actions, Selectors };
