@@ -55,7 +55,8 @@ function checkedReducer(state = [], action) {
 /* *************** Selectors *************** */
 
 const getUsers = createSelector(
-    [state => state.entities.data.byId, state => state.entities.data.ids],
+    state => state.entities.data.byId,
+    state => state.entities.data.ids,
     (byId, ids) => ids.map(id => byId[id]),
 );
 
