@@ -19,22 +19,11 @@ const INITIAL_STATE = {
 
 function entitiesReducer(state = INITIAL_STATE, action) {
     switch (action.type) {
-    case 'GET_ENTITIES_REQUEST':
+    case 'LOAD_MORE_REQUEST':
         return {
             ...state,
             loading: true,
         };
-
-    case 'GET_ENTITIES_SUCCESS':
-        return {
-            ...state,
-            loading: false,
-            data: action.payload.data,
-            pagination: action.payload.pagination,
-        };
-
-    case 'LOAD_MORE_FAILURE':
-        return { ...state, loading: false };
 
     case 'LOAD_MORE_SUCCESS':
         return {
@@ -43,6 +32,9 @@ function entitiesReducer(state = INITIAL_STATE, action) {
             data: [...state.data, ...action.payload.data],
             pagination: action.payload.pagination,
         };
+
+    case 'LOAD_MORE_FAILURE':
+        return { ...state, loading: false };
 
     case 'ENTITY_CHECK':
         return {
