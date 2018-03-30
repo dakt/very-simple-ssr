@@ -135,9 +135,8 @@ const loadMore = () => async (dispatch, getState) => {
 };
 
 const deleteEntity = id => async (dispatch) => {
-    dispatch(deleteEntityRequest());
-
     try {
+        dispatch(deleteEntityRequest());
         await ApiCall(`/users/${id}`).remove();
         dispatch(deleteEntitySuccess());
     } catch (error) {
