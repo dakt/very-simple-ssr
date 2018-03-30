@@ -11,17 +11,16 @@ function dataReducer(state = {
     byId: {},
     ids: [],
 }, action) {
-
     switch (action.type) {
     case 'LOAD_MORE_REQUEST':
         return {
             ...state,
             loading: true,
-        }
+        };
     case 'LOAD_MORE_SUCCESS':
         return {
             loading: false,
-            byId: { ...state.byId, ...action.payload.byId},
+            byId: { ...state.byId, ...action.payload.byId },
             ids: [...state.ids, ...action.payload.ids],
         };
     case 'LOAD_MORE_FAILURE':
@@ -36,7 +35,6 @@ function paginationReducer(state = {
     limit: 20,
     count: 0,
 }, action) {
-
     if (action.type === 'LOAD_MORE_SUCCESS') {
         return action.payload.pagination;
     }
@@ -45,9 +43,8 @@ function paginationReducer(state = {
 }
 
 function checkedReducer(state = [], action) {
-
     if (action.type === 'ENTITY_CHECK') {
-        return state.includes(action.payload.id) 
+        return state.includes(action.payload.id)
             ? state.filter(id => id !== action.payload.id)
             : [...state, action.payload.id];
     }
@@ -59,7 +56,7 @@ function checkedReducer(state = [], action) {
 
 const getUsers = createSelector(
     [state => state.entities.data.byId, state => state.entities.data.ids],
-    (byId, ids) => ids.map(id => byId[id])
+    (byId, ids) => ids.map(id => byId[id]),
 );
 
 const Selectors = {
@@ -75,7 +72,6 @@ function loadMoreRequest() {
 }
 
 function loadMoreSuccess(data, page, limit, count) {
-
     const users = new schema.Entity('users');
     const normalizedData = normalize(data, [users]);
 
@@ -114,7 +110,9 @@ function entityCheck(id) {
 
 const loadMore = () => async (dispatch, getState) => {
     const state = getState();
-    let { page, limit, count } = Selectors.getPagination(state);
+    const pagination = Selectors.getPagination(state);
+    const { limit, count } = pagination;
+    let { page } = pagination;
 
     // If page is null it is a initial request done by the server
     page = page === null ? 1 : page + 1;
