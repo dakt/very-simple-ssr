@@ -1,5 +1,4 @@
 import ApiCall from '../utils/rest';
-import { debug } from 'util';
 
 /* *************** Reducers *************** */
 
@@ -8,9 +7,9 @@ const INITIAL_STATE = {
     data: [],
     checked: [],
     pagination: {
-        /* 
-         * Null will be replaced by "1" after the server 
-         * completes initial request 
+        /*
+         * Null will be replaced by "1" after the server
+         * completes initial request
          */
         page: null,
         count: 0,
@@ -74,7 +73,7 @@ function loadMoreRequest() {
 }
 
 function loadMoreSuccess(data, page, limit, count) {
-    return { 
+    return {
         type: 'LOAD_MORE_SUCCESS',
         payload: { data, pagination: { page, limit, count } },
     };

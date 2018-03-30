@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import List from '../components/List';
 import UserCard from './UserCard';
 import { Actions } from './redux';
-import ApiCall from '../utils/rest';
 import styles from './Home.css';
 
 
