@@ -123,19 +123,19 @@ app.get('/*', async (req, res) => {
         }
 
         if (match.component.getInitialData) {
-            await match.component.getInitialData({
-                ...req,
-                dispatch: store.dispatch,
-                getState: store.getState,
-                isServer: true,
-            });
+            // await match.component.getInitialData({
+            //     ...req,
+            //     dispatch: store.dispatch,
+            //     getState: store.getState,
+            //     isServer: true,
+            // });
         }
 
         const Component = (
             <Provider store={store}>
                 <Router>
                     <App>
-                        {<match.component />}
+                        {/* {<match.component />} */}
                     </App>
                 </Router>
             </Provider>

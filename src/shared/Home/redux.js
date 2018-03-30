@@ -1,3 +1,5 @@
+import { combineReducers } from 'redux';
+
 import ApiCall from '../utils/rest';
 
 /* *************** Reducers *************** */
@@ -57,6 +59,58 @@ function entitiesReducer(state = INITIAL_STATE, action) {
         return state;
     }
 }
+
+function dataReducer(state = {
+    loading: false,
+    byId: {},
+    ids: [],
+}, action) {
+
+    if (action.type === 'LOAD_MORE_SUCCESS') {
+        return {
+            ...state,
+            ids: action.payload.data,
+        };
+    }
+
+    return state;
+}
+
+function paginationReducer(state = {
+    page: null,
+    limit: 10,
+    count: 0,
+}, action) {
+
+    if (action.type === 'LOAD_MORE_SUCCESS') {
+        return state;
+    }
+
+    return state;
+}
+
+function checkedReducer(state = [], action) {
+
+    if (action.type === 'ENTITY_CHECK') {
+        return state;
+    }
+
+    return state;
+}
+
+
+export default combineReducers({
+    data: dataReducer,
+    pagination: paginationReducer,
+    checked: checkedReducer,
+});
+
+
+const Selectors = {
+    getUsers: state => state.entities.data.ids,
+    getPagination: state => state.entities.pagination,
+    getChecked: state => state.entities.checked,
+};
 
 /* *************** Actions *************** */
 
@@ -135,5 +189,5 @@ const Actions = {
     loadMore,
 };
 
-export default entitiesReducer;
-export { Actions };
+//export default entitiesReducer;
+export { Actions, Selectors };

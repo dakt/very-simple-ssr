@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import List from '../components/List';
 import UserCard from './UserCard';
-import { Actions } from './redux';
+import { Actions, Selectors } from './redux';
 import styles from './Home.css';
 
 
@@ -53,9 +53,9 @@ export class GistList extends React.Component {
 
 const mapStateToProps = state => ({
     loading: state.entities.loading,
-    data: state.entities.data,
-    checked: state.entities.checked,
-    pagination: state.entities.pagination,
+    data: Selectors.getUsers(state),
+    checked: Selectors.getChecked(state),
+    pagination: Selectors.getPagination(state),
 });
 
 const mapDispatchToProps = dispatch => ({
