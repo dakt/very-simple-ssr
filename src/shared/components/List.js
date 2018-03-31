@@ -1,14 +1,32 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import cx from 'classnames';
 
 import styles from './List.css';
 import VirtualScroller from '../components/VirtualScroller';
 
 
 export default class List extends React.Component {
+    state = {
+        isLoading: false,
+        isStillLoading: false,
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.throttleLoadingIndicator(nextProps);
+    }
+
     trackMouse = false;
     lastMouseX = null;
     positionX = null;
+
+    throttleLoadingIndicator(nextProps) {
+        this.setState({ isLoading: nextProps.loading });
+
+        setTimeout(() => {
+            this.setState({ isStillLoading: this.state.isLoading });
+        }, this.props.waitTrashold);
+    }
 
     handleSlideUpAnimationComplete(event) {
         const node = event.target;
@@ -148,26 +166,36 @@ export default class List extends React.Component {
 
     render() {
         return (
-            <VirtualScroller onNearEnd={this.props.onNearEnd} hasMore={this.props.loading}>
+            <VirtualScroller
+                onNearEnd={this.props.onNearEnd}
+                hasMore={this.props.loading}
+                threshold={70}
+            >
                 <div className={styles.container} ref={(node) => { this.list = node; }}>
                     {this.props.data.map(d => (
                         <div
+                            role="presentation"
                             className={styles.item}
                             key={d[this.props.idField]}
                             /** Mouse events */
-                            onMouseDown={(e) => this.handleMouseDown(e, d)}
-                            onMouseUp={(e) => this.handleMouseUp(e, d)}
-                            onMouseMove={(e) => this.handleMouseMove(e, d)}
-                            onMouseEnter={(e) => this.handleMouseEnter(e, d)}
-                            onMouseLeave={(e) => this.handleMouseLeave(e, d)}
+                            onMouseDown={e => this.handleMouseDown(e, d)}
+                            onMouseUp={e => this.handleMouseUp(e, d)}
+                            onMouseMove={e => this.handleMouseMove(e, d)}
+                            onMouseEnter={e => this.handleMouseEnter(e, d)}
+                            onMouseLeave={e => this.handleMouseLeave(e, d)}
                             /** Touch events */
-                            onTouchStart={(e) => this.handleTouchStart(e, d)}
-                            onTouchEnd={(e) => this.handleTouchEnd(e, d)}
-                            onTouchMove={(e) => this.handleTouchMove(e, d)}
+                            onTouchStart={e => this.handleTouchStart(e, d)}
+                            onTouchEnd={e => this.handleTouchEnd(e, d)}
+                            onTouchMove={e => this.handleTouchMove(e, d)}
                         >
                             {this.props.children(d)}
                         </div>
                     ))}
+                </div>
+                <div className={cx(styles.loadingContainer, { visible: this.state.isStillLoading })}>
+                    <div>
+                        Loading...
+                    </div>
                 </div>
             </VirtualScroller>
         );
@@ -178,6 +206,8 @@ List.defaultProps = {
     children: null,
     idField: 'id',
     data: [],
+    loading: false,
+    waitTrashold: 1000,
     onRemove: f => f,
     onNearEnd: f => f,
 };
@@ -193,6 +223,8 @@ List.propTypes = {
         PropTypes.number,
     ]),
     data: PropTypes.arrayOf(PropTypes.object),
+    loading: PropTypes.bool,
+    waitTrashold: PropTypes.number,
     onRemove: PropTypes.func,
     onNearEnd: PropTypes.func,
 };

@@ -115,13 +115,13 @@ const loadMore = () => async (dispatch, getState) => {
     const { limit, count } = pagination;
     let { page } = pagination;
 
-    // If page is null it is a initial request done by the server
-    page = page === null ? 1 : page + 1;
-
     if (page !== 1 && page * limit > count) {
         dispatch(noMore());
         return;
     }
+
+    // If page is null it is a initial request done by the server
+    page = page === null ? 1 : page + 1;
 
     try {
         dispatch(loadMoreRequest());

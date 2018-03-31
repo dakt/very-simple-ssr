@@ -5,3 +5,14 @@
 .item {
     will-change: transform;
 }
+
+.loadingContainer {
+    display: none;
+    padding: 100px;
+    background: #fff;
+}
+
+.loadingContainer>div {
+    display: flex;
+    justify-content: center;
+}

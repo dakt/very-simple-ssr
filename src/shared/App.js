@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import styles from './app.css';
+import './global.css';
 
 
 export default ({ children }) => (

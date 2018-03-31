@@ -13,10 +13,10 @@ import NotFound from '../shared/404';
 import { configureStore } from '../shared/store';
 
 
-function generateFakeData() {
+function generateFakeData(count) {
     const data = [];
 
-    for (let i = 0; i < 100; i += 1) {
+    for (let i = 0; i < count; i += 1) {
         data.push({
             id: faker.random.uuid(),
             firstName: faker.name.firstName(),
@@ -57,7 +57,7 @@ function renderToHTML(Element, initialProps) {
 }
 
 const app = express();
-let FAKE_DATA = generateFakeData();
+let FAKE_DATA = generateFakeData(500);
 
 app.use(express.static('dist'));
 
@@ -144,7 +144,7 @@ app.get('/*', async (req, res) => {
         const intialState = store.getState();
 
         res.send(renderToHTML(Component, intialState));
-    } catch(error) {
+    } catch (error) {
         res.status(500);
     }
 });
