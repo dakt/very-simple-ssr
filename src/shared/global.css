@@ -1,0 +1,9 @@
+
+
+:global(.visible) {
+    display: block !important;
+}
+
+:global(.invisible) {
+    display: none !important;
+}
