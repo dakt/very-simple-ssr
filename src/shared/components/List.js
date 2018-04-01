@@ -31,8 +31,8 @@ export default class List extends React.Component {
     handleSlideUpAnimationComplete(event) {
         const node = event.target;
         node.removeEventListener('transitionend', this.handleSlideUpAnimationComplete);
-        node.style.transition = '';
-        node.style.transform = '';
+        node.style.transition = null;
+        node.style.transform = null;
     }
 
     repositionNodesBelow(element, data) {
@@ -40,7 +40,7 @@ export default class List extends React.Component {
         const nodeIndex = allNodes.findIndex(node => node === element) + 1;
 
         // Hide node in order to trigger nodes below to reposition
-        element.style = 'display: none';
+        element.style.display = 'none';
 
         // For every node below...
         for (let i = nodeIndex; i < allNodes.length; i += 1) {
