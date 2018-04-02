@@ -209,6 +209,24 @@ export default class List extends React.Component {
     }
 
     render() {
+        const handlers = d => ({
+            /** Mouse events */
+            onMouseDown: e => this.handleMouseDown(e, d),
+            onMouseUp: e => this.handleMouseUp(e, d),
+            onMouseMove: e => this.handleMouseMove(e, d),
+            onMouseEnter: e => this.handleMouseEnter(e, d),
+            onMouseLeave: e => this.handleMouseLeave(e, d),
+            /** Touch events */
+            onTouchStart: e => this.handleTouchStart(e, d),
+            onTouchEnd: e => this.handleTouchEnd(e, d),
+            onTouchMove: e => this.handleTouchMove(e, d),
+        });
+
+        const loadingClasses = cx(
+            styles.loadingContainer,
+            { visible: this.state.isStillLoading },
+        );
+
         return (
             <VirtualScroller
                 onNearEnd={this.props.onNearEnd}
@@ -221,22 +239,13 @@ export default class List extends React.Component {
                             role="presentation"
                             className={styles.item}
                             key={d[this.props.idField]}
-                            /** Mouse events */
-                            onMouseDown={e => this.handleMouseDown(e, d)}
-                            onMouseUp={e => this.handleMouseUp(e, d)}
-                            onMouseMove={e => this.handleMouseMove(e, d)}
-                            onMouseEnter={e => this.handleMouseEnter(e, d)}
-                            onMouseLeave={e => this.handleMouseLeave(e, d)}
-                            /** Touch events */
-                            onTouchStart={e => this.handleTouchStart(e, d)}
-                            onTouchEnd={e => this.handleTouchEnd(e, d)}
-                            onTouchMove={e => this.handleTouchMove(e, d)}
+                            {...handlers(d)}
                         >
                             {this.props.children(d)}
                         </div>
                     ))}
                 </div>
-                <div className={cx(styles.loadingContainer, { visible: this.state.isStillLoading })}>
+                <div className={loadingClasses}>
                     <div>
                         Loading...
                     </div>
