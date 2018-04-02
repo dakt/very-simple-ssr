@@ -16,9 +16,31 @@ export default class List extends React.Component {
         this.throttleLoadingIndicator(nextProps);
     }
 
-    trackMouse = false;
-    lastMouseX = null;
-    lastMouseY = null;
+    /*
+     * Used to track if we are tracking initial movement
+     * in order to prevent card sliding when doing vertical
+     * scrolling
+     */
+    isInitial = null;
+
+    /*
+     * Wheter the card should track mouse horizontal movenents
+     */
+    isTracking = false;
+
+    /*
+     * Used to calculate clintX delta
+     */
+    lastClientX = null;
+
+    /*
+     * Used to calculate clintY delta
+     */
+    lastClientY = null;
+
+    /*
+     * Stores cards current X position
+     */
     positionX = null;
 
     throttleLoadingIndicator(nextProps) {
@@ -71,11 +93,11 @@ export default class List extends React.Component {
         const thisMouseX = event.clientX || event.touches[0].clientX;
         const thisMouseY = event.clientY || event.touches[0].clientY;
 
-        const deltaX = thisMouseX - this.lastMouseX;
-        const deltaY = thisMouseY - this.lastMouseY;
+        const deltaX = thisMouseX - this.lastClientX;
+        const deltaY = thisMouseY - this.lastClientY;
 
-        this.lastMouseX = thisMouseX;
-        this.lastMouseY = thisMouseY;
+        this.lastClientX = thisMouseX;
+        this.lastClientY = thisMouseY;
 
         const isVertical = Math.abs(deltaY / deltaX) > 1;
 
@@ -83,7 +105,7 @@ export default class List extends React.Component {
             this.isInitial = false;
             
             if (isVertical) {
-                this.trackMouse = false;
+                this.isTracking = false;
                 return;
             }
         }
@@ -123,34 +145,39 @@ export default class List extends React.Component {
         }
     }
 
-    release(element, data) {
-        this.trackMouse = false;
+    release(event, data) {
+        const element = event.currentTarget;
+        this.isTracking = false;
+        this.lastClientX = null;
+        this.lastClientY = null;
 
-        if (this.positionX > element.parentNode.offsetWidth * 0.4) {
+        if (this.positionX > element.parentNode.offsetWidth * 0.5) {
             window.requestAnimationFrame(() => this.leaveScreen(element, data));
         } else {
             window.requestAnimationFrame(() => this.resetPosition(element));
         }
     }
 
+    startTracking(event) {
+        this.isInitial = true;
+        this.isTracking = true;
+        this.positionX = 0;
+        this.lastClientX = event.clientX || event.touches[0].clientX;
+        this.lastClientY = event.clientY || event.touches[0].clientY;
+    }
+
     /* *********** Mouse handlers *********** */
 
     handleMouseDown(event) {
-        this.isInitial = true;
-        this.trackMouse = true;
-        this.positionX = 0;
-
-        this.lastMouseX = event.clientX;
-        this.lastMouseY = event.clientY;
+        this.startTracking(event);
     }
 
     handleMouseUp(event, data) {
-        const element = event.currentTarget;
-        this.release(element, data);
+        this.release(event, data);
     }
 
     handleMouseMove(event) {
-        if (this.trackMouse) {
+        if (this.isTracking) {
             this.updatePosition(event);
         }
     }
@@ -160,35 +187,25 @@ export default class List extends React.Component {
     }
 
     handleMouseLeave(event, data) {
-        const element = event.currentTarget;
-        if (this.trackMouse) {
-            this.release(element, data);
+        if (this.isTracking) {
+            this.release(event, data);
         }
     }
 
     /* *********** Touch handlers *********** */
 
     handleTouchStart(event) {
-        this.isInitial = true;
-        this.trackMouse = true;
-        this.positionX = 0;
-
-        this.lastMouseX = event.clientX || event.touches[0].clientX;
-        this.lastMouseY = event.clientY || event.touches[0].clientY;
+        this.startTracking(event);
     }
 
     handleTouchMove(event) {
-        if (this.trackMouse) {
+        if (this.isTracking) {
             this.updatePosition(event);
         }
     }
 
     handleTouchEnd(event, data) {
-        const element = event.currentTarget;
-        this.release(element, data);
-
-        this.lastMouseX = null;
-        this.lastMouseY = null;
+        this.release(event, data);
     }
 
     render() {
