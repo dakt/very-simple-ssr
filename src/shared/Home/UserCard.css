@@ -4,6 +4,7 @@
     border-bottom: 1px solid lightgray;
     cursor: pointer;
     user-select: none;
+    padding: 10px;
 }
 
 .checked {

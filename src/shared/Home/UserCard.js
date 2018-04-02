@@ -11,10 +11,10 @@ import styles from './UserCard.css';
 const UserCard = ({ onChecked, data, checked }) => (
     <div className={cx(styles.container, { [styles.checked]: checked })}>
         <div className={styles.iconContainer}>
-            <Check
+            {/* <Check
                 checked={checked}
                 onClick={e => onChecked(e, data)}
-            />
+            /> */}
             <div className={styles.avatar}>
                 <img src={data.avatar} alt="avatar" />
             </div>

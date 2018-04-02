@@ -159,9 +159,9 @@ export default class List extends React.Component {
         }
     }
 
-    handleTouchEnd(event) {
+    handleTouchEnd(event, data) {
         const element = event.currentTarget;
-        this.release(element);
+        this.release(element, data);
     }
 
     render() {

@@ -7,8 +7,10 @@ function doApiCall(url, method = 'GET') {
         method,
     };
 
-    return fetch(url, header)
-        .then((response) => {
+    const promise = fetch(url, header);
+
+    if (method === 'GET') {
+        return promise.then((response) => {
             structuredResponse = {
                 count: response.headers.get('x-total-count'),
                 page: response.headers.get('x-page'),
@@ -16,15 +18,13 @@ function doApiCall(url, method = 'GET') {
             };
 
             return response.json();
-        })
-        .then(json => ({
+        }).then(json => ({
             ...structuredResponse,
             ...json,
-        }))
-        .catch(error => {
-            //console.error(error);
-            throw new Error(error);
-        });
+        }));
+    }
+
+    return promise;
 }
 
 function get(resource) {

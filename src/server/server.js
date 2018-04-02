@@ -62,6 +62,8 @@ let FAKE_DATA = generateFakeData(500);
 app.use(express.static('dist'));
 
 app.get('/api/users', async (req, res) => {
+    console.log(req.method, req.path);
+    
     try {
         const { page, limit } = req.query;
         const responseData = FAKE_DATA.slice((page - 1) * limit, page * limit);
@@ -86,13 +88,15 @@ app.get('/api/users', async (req, res) => {
 });
 
 app.delete('/api/users/:id', async (req, res) => {
+    console.log(req.method, req.path);
+
     try {
         const { id } = req.params;
 
         FAKE_DATA = FAKE_DATA.filter(data => data.id !== id);
 
         res
-            .status(204)
+            .status(200)
             .send({
                 data: id,
                 message: 'RESOURCE_DELETED',
