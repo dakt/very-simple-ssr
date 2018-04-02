@@ -18,6 +18,7 @@ export default class List extends React.Component {
 
     trackMouse = false;
     lastMouseX = null;
+    lastMouseY = null;
     positionX = null;
 
     throttleLoadingIndicator(nextProps) {
@@ -65,15 +66,9 @@ export default class List extends React.Component {
         });
     }
 
-    updatePosition(element, clientX) {
-        // Calculate delta
-        const delta = clientX - this.lastMouseX;
-
-        // Update last mouse position
-        this.lastMouseX = clientX;
-
+    updatePosition(element, deltaX) {
         // Calcualte new position
-        this.positionX = this.positionX + delta;
+        this.positionX = this.positionX + deltaX;
 
         window.requestAnimationFrame(() => {
             element.style.transform = `translateX(${this.positionX}px)`;
@@ -120,9 +115,12 @@ export default class List extends React.Component {
     /* *********** Mouse handlers *********** */
 
     handleMouseDown(event) {
-        this.positionX = 0;
+        this.isInitial = true;
         this.trackMouse = true;
+        this.positionX = 0;
+
         this.lastMouseX = event.clientX;
+        this.lastMouseY = event.clientY;
     }
 
     handleMouseUp(event, data) {
@@ -132,7 +130,17 @@ export default class List extends React.Component {
 
     handleMouseMove(event) {
         const element = event.currentTarget;
-        if (this.trackMouse) this.updatePosition(element, event.clientX);
+
+        const thisMouseX = event.clientX;
+        const thisMouseY = event.clientY;
+
+        const deltaX = thisMouseX - this.lastMouseX;
+        const deltaY = thisMouseY - this.lastMouseY;
+
+        this.lastMouseX = thisMouseX;
+        this.lastMouseY = thisMouseY;
+
+        if (this.trackMouse) this.updatePosition(element, deltaX);
     }
 
     handleMouseEnter() {
@@ -147,21 +155,48 @@ export default class List extends React.Component {
     /* *********** Touch handlers *********** */
 
     handleTouchStart(event) {
+        this.isInitial = true;
         this.trackMouse = true;
         this.positionX = 0;
+
         this.lastMouseX = event.clientX || event.touches[0].clientX;
+        this.lastMouseY = event.clientY || event.touches[0].clientY;
     }
 
     handleTouchMove(event) {
         const element = event.currentTarget;
+
+        const thisMouseX = event.clientX || event.touches[0].clientX;
+        const thisMouseY = event.clientY || event.touches[0].clientY;
+
+        const deltaX = thisMouseX - this.lastMouseX;
+        const deltaY = thisMouseY - this.lastMouseY;
+
+        this.lastMouseX = thisMouseX;
+        this.lastMouseY = thisMouseY;
+
+        const isVertical = Math.abs(deltaY / deltaX) > 1;
+
+        if (this.isInitial) {
+            this.isInitial = false;
+            
+            if (isVertical) {
+                this.trackMouse = false;
+                return;
+            }
+        }
+
         if (this.trackMouse) {
-            this.updatePosition(element, event.clientX || event.touches[0].clientX);
+            this.updatePosition(element, deltaX);
         }
     }
 
     handleTouchEnd(event, data) {
         const element = event.currentTarget;
         this.release(element, data);
+
+        this.lastMouseX = null;
+        this.lastMouseY = null;
     }
 
     render() {
