@@ -56,7 +56,7 @@ export default class List extends React.Component {
             for (let i = nodeIndex; i < allNodes.length; i += 1) {
                 const node = allNodes[i];
 
-                node.style.transition = 'transform 300ms';
+                node.style.transition = 'transform 350ms';
                 node.style.transform = null;
             }
 
