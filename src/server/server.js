@@ -57,13 +57,16 @@ function renderToHTML(Element, initialProps) {
 }
 
 const app = express();
-let FAKE_DATA = generateFakeData(500);
+let FAKE_DATA = generateFakeData(200);
+
+app.use((req, res, next) => {
+    console.log(new Date().getTime(), req.method, req.path);
+    next();
+});
 
 app.use(express.static('dist'));
 
 app.get('/api/users', async (req, res) => {
-    console.log(req.method, req.path);
-    
     try {
         const { page, limit } = req.query;
         const responseData = FAKE_DATA.slice((page - 1) * limit, page * limit);
@@ -88,8 +91,6 @@ app.get('/api/users', async (req, res) => {
 });
 
 app.delete('/api/users/:id', async (req, res) => {
-    console.log(req.method, req.path);
-
     try {
         const { id } = req.params;
 
@@ -111,8 +112,6 @@ app.delete('/api/users/:id', async (req, res) => {
 });
 
 app.get('/*', async (req, res) => {
-    console.log(req.method, req.path);
-
     try {
         const history = createMemoryHistory({ initialEntries: [req.url] });
         const store = configureStore(history);
