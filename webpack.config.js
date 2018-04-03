@@ -1,6 +1,38 @@
 const path = require('path');
+const process =require('process');
+const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
+
+const isProduction = process.env.NODE_ENV === 'production';
+
+const sharedPlugins = [new ExtractTextPlugin('styles.css')];
+const clientPlugins = sharedPlugins.concat(isProduction ? [
+    new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify('production'),
+    }),
+    new UglifyJsPlugin({
+        parallel: true,
+    }),
+] : []);
+const serverPlugins = sharedPlugins;
+
+const modulesRules = [
+    {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: 'babel-loader',
+    },
+    {
+        test: /\.css$/,
+        exclude: /node_modules/,
+        use: ExtractTextPlugin.extract({
+            fallback: 'style-loader',
+            use: 'css-loader?modules&localIdentName=[hash:base64:5]_[local]',
+        }),
+    },
+];
 
 const client = {
     mode: 'development',
@@ -15,30 +47,14 @@ const client = {
         filename: '[name].js',
     },
     module: {
-        rules: [
-            {
-                test: /\.js$/,
-                exclude: /node_modules/,
-                use: 'babel-loader'
-            },
-            {
-                test: /\.css$/,
-                exclude: /node_modules/,
-                use: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: 'css-loader?modules&localIdentName=[hash:base64:5]_[local]'
-                }),
-            },
-        ],
+        rules: modulesRules,
     },
     optimization: {
         splitChunks: {
             chunks: 'all',
         },
     },
-    plugins: [
-        new ExtractTextPlugin('styles.css'),
-    ],
+    plugins: clientPlugins,
 };
 
 const server = {
@@ -51,25 +67,9 @@ const server = {
         libraryTarget: 'commonjs2',
     },
     module: {
-        rules: [
-            {
-                test: /\.js$/,
-                exclude: /node_modules/,
-                use: 'babel-loader'
-            },
-            {
-                test: /\.css$/,
-                exclude: /node_modules/,
-                use: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: 'css-loader?modules&localIdentName=[hash:base64:5]_[local]'
-                }),
-            },
-        ],
+        rules: modulesRules,
     },
-    plugins: [
-        new ExtractTextPlugin('styles.css'),
-    ],
+    plugins: serverPlugins,
 };
 
 module.exports = [client, server];
