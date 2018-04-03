@@ -21,6 +21,7 @@
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.7.0",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "rimraf": "^2.6.2",
     "style-loader": "^0.20.3",
     "uglifyjs-webpack-plugin": "^1.2.4",
     "webpack": "^4.1.1",
@@ -46,9 +47,10 @@
     "reselect": "^3.0.1"
   },
   "scripts": {
+    "clean": "rimraf dist",
     "start": "node start.js",
     "start:prod": "npm run build && node prod",
-    "build": "cross-env NODE_ENV='production' webpack",
+    "build": "cross-env NODE_ENV='production' npm run clean && webpack --colors --display errors-only --progress",
     "lint": "eslint ./src"
   }
 }
