@@ -15,6 +15,11 @@ clientCompiler.watch({
     ignored: /node_modules/,
 }, (err, stats) => {
 
+    if (stats.hasErrors()) {
+        console.log('COMPILATIONS ERRORS');
+        return;
+    }
+
     console.log('Watching client files');
 });
 
@@ -23,6 +28,12 @@ serverCompiler.outputFileSystem = fs;
 serverCompiler.watch({
     ignored: /node_modules/,
 }, (err, stats) => {
+
+    if (stats.hasErrors()) {
+        console.log('COMPILATIONS ERRORS');
+        return;
+    }
+
     const content = fs.readFileSync(
         path.resolve(
             serverConfig.output.path,
