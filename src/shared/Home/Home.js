@@ -25,6 +25,18 @@ export class GistList extends React.Component {
         this.props.remove(data.id);
     }
 
+    connectAndRenderUserCard(data) {
+        const mapStateToProps = (state, ownProps) => ({
+            checked: Selectors.isChecked(state, ownProps.data.id),
+        });
+
+        return React.createElement(connect(mapStateToProps)(UserCard), {
+            data,
+            onClik: f => f,
+            onChecked: f => f,
+        });
+    }
+
     render() {
         return (
             <div>
@@ -36,13 +48,7 @@ export class GistList extends React.Component {
                     onNearEnd={_ => this.props.loadMore()}
                 >
                     {
-                        data => (
-                            <UserCard
-                                data={data}
-                                onClick={() => this.handleClick()}
-                                onChecked={(e, d) => this.handleChecked(e, d)}
-                            />
-                        )
+                        data => this.connectAndRenderUserCard(data)
                     }
                 </List>
             </div>
