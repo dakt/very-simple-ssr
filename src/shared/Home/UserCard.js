@@ -10,7 +10,7 @@ import styles from './UserCard.css';
 
 
 const UserCard = ({ onChecked, onClick, data, checked }) => (
-    <Link to={`/user/${data.id}`} className={cx(styles.container, { [styles.checked]: checked })}>
+    <Link to={`/user/${data.id}`} className={cx(styles.container, { [styles.checked]: checked })} draggable="false">
         <div className={styles.iconContainer}>
             {/* <Check
                 checked={checked}
@@ -21,9 +21,11 @@ const UserCard = ({ onChecked, onClick, data, checked }) => (
             </div>
         </div>
         <div className={styles.body}>
-            <div>{data.firstName}</div>
-            <div>{data.lastName}</div>
-            <div>{data.email}</div>
+            <div className={styles.name}>{data.firstName} {data.lastName}</div>
+            <div className={styles.email}>
+                <i className="material-icons">mail_outline</i>
+                <span>{data.email}</span>
+            </div>
         </div>
     </Link>
 );

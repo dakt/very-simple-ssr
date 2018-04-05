@@ -5,6 +5,8 @@
     cursor: pointer;
     user-select: none;
     padding: 10px;
+    text-decoration: none;
+    color: inherit;
 }
 
 .checked {
@@ -31,4 +33,26 @@
 
 .body {
     padding: 20px 20px;
+}
+
+.name {
+    font-weight: bold;
+    color: #242424;
+    margin: 1px 0px;
+}
+
+.email {
+    color: rgb(61, 61, 61);
+    margin: 1px 0px;
+}
+
+.email i {
+    vertical-align: middle;
+    font-size: 1.2em;
+}
+
+.email span {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 5px;
 }

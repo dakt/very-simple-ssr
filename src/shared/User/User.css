@@ -1,3 +1,31 @@
 .container {
-    
+    padding: 10px;
+    background: #fff;
 }
+
+.infoBox {
+    margin: 10px 0px;
+}
+
+.textRow {
+    margin: 5px 0px;
+}
+
+.avatar {
+
+}
+
+.name {
+    font-size: 2em;
+}
+
+.aboutMe {
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid gray;
+}
+
+.aboutMe>div {
+    font-weight: bold;
+}
+

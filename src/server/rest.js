@@ -7,7 +7,7 @@ function generateFakeData(count) {
 
     for (let i = 0; i < count; i += 1) {
         data.push({
-            id: faker.random.uuid(),
+            id: i.toString(),
             firstName: faker.name.firstName(),
             lastName: faker.name.lastName(),
             email: faker.internet.email(),
@@ -26,7 +26,6 @@ let FAKE_DATA = generateFakeData(200);
 
 const getOne = async (req, res) => {
     const { id } = req.params;
-
     const responseData = FAKE_DATA.find(data => data.id === id);
 
     if (responseData) {
@@ -68,7 +67,6 @@ const getMany = async (req, res) => {
 const deleteOne = async (req, res) => {
     try {
         const { id } = req.params;
-
         FAKE_DATA = FAKE_DATA.filter(data => data.id !== id);
 
         res

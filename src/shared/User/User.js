@@ -18,13 +18,18 @@ class User extends React.Component {
 
         return (
             <div className={styles.container}>
-                <img src={data.avatar} alt={data.avatar} />
-                <span>{data.firstName}</span>
-                <span>{data.lastName}</span>
-                <span>{data.email}</span>
-                <span>{data.country}</span>
-                <span>{data.city}</span>
-                <p>{data.aboutMe}</p>
+                <div className={styles.avatar}>
+                    <img src={data.avatar} alt={data.avatar} />
+                </div>
+                <div className={styles.infoBox}>
+                    <div className={styles.name}>{data.firstName} {data.lastName}</div>
+                    <div className={styles.textRow}>{data.email}</div>
+                    <div className={styles.textRow}>{data.city}, {data.country}</div>
+                    <div className={styles.aboutMe}>
+                        <div>About Me</div>
+                        <p>{data.aboutMe}</p>
+                    </div>
+                </div>
             </div>
         );
     }
