@@ -15,7 +15,7 @@ export default [
         exact: true,
     },
     {
-        path: '/user',
+        path: '/user/:id',
         component: User,
         exact: true,
     },

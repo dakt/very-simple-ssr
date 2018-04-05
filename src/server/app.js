@@ -25,10 +25,10 @@ function renderToHTML(Element, initialProps) {
         <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet">
-        <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="/styles.css">
 
-        <script defer type="text/javascript" src="vendors~bundle.js"></script>
-        <script defer type="text/javascript" src="bundle.js"></script>
+        <script defer type="text/javascript" src="/vendors~bundle.js"></script>
+        <script defer type="text/javascript" src="/bundle.js"></script>
     </head>
     <body>
         <div id="root">${html}</div>
@@ -43,11 +43,11 @@ function renderToHTML(Element, initialProps) {
 router.get('/*', async (req, res) => {
     try {
         const history = createMemoryHistory({ initialEntries: [req.url] });
-        const store = configureStore(history);
+        const store = configureStore(history, routes);
 
         let match = routes.reduce((acc, route) => {
             const found = matchPath(req.path, route);
-            return found ? route : acc;
+            return found ? { ...route, ...found } : acc;
         }, null);
 
         if (match === null) {
@@ -77,6 +77,7 @@ router.get('/*', async (req, res) => {
 
         res.send(renderToHTML(Component, intialState));
     } catch (error) {
+        console.error('Server Error:', error);
         res.status(500);
     }
 });

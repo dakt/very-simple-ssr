@@ -1,9 +1,17 @@
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
+import { matchPath } from 'react-router';
 import thunk from 'redux-thunk';
 import qs from 'query-string';
 
 import entitiesReducer from './Home/redux';
+import userReducer from './User/redux';
 
+function findRoute(routes, path) {
+    return routes.reduce((acc, route) => {
+        const found = matchPath(path, route);
+        return found ? { ...route, ...found } : acc;
+    }, null);
+}
 
 function routeReducer(state = {}, action) {
     if (action.type === 'ROUTE_CHANGED') {
@@ -16,13 +24,14 @@ function routeReducer(state = {}, action) {
 const rootReducer = combineReducers({
     route: routeReducer,
     entities: entitiesReducer,
+    user: userReducer,
 });
 
 function isClient() {
     return typeof window !== 'undefined' && window.document;
 }
 
-function configureStore(history) {
+function configureStore(history, routes) {
     const composeEnhancers = isClient()
         ? (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose)
         : compose;
@@ -38,20 +47,26 @@ function configureStore(history) {
     );
 
     history.listen((location) => {
+        const match = findRoute(routes, history.location.pathname);
+
         store.dispatch({
             type: 'ROUTE_CHANGED',
             payload: {
                 ...location,
+                params: match.params,
                 qs: qs.parse(location.search),
             },
         });
     });
+
+    const match = findRoute(routes, history.location.pathname);
 
     // Initial route change
     store.dispatch({
         type: 'ROUTE_CHANGED',
         payload: {
             ...history.location,
+            params: match.params,
             qs: qs.parse(history.location.search),
             type: 'SERVER',
         },
@@ -61,3 +76,4 @@ function configureStore(history) {
 }
 
 export { configureStore };
+

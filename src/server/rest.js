@@ -12,6 +12,10 @@ function generateFakeData(count) {
             lastName: faker.name.lastName(),
             email: faker.internet.email(),
             avatar: faker.image.avatar(),
+            country: faker.address.country(),
+            city: faker.address.city(),
+            memberSince: faker.date.past(),
+            aboutMe: faker.lorem.paragraph(),
         });
     }
 
@@ -19,6 +23,23 @@ function generateFakeData(count) {
 }
 
 let FAKE_DATA = generateFakeData(200);
+
+const getOne = async (req, res) => {
+    const { id } = req.params;
+
+    const responseData = FAKE_DATA.find(data => data.id === id);
+
+    if (responseData) {
+        res
+            .status(200)
+            .send({
+                message: 'OK',
+                data: responseData,
+            });
+    } else {
+        res.status(404);
+    }
+};
 
 const getMany = async (req, res) => {
     try {
@@ -66,6 +87,7 @@ const deleteOne = async (req, res) => {
 };
 
 const router = express.Router();
+router.get('/api/users/:id', getOne);
 router.get('/api/users', getMany);
 router.delete('/api/users/:id', deleteOne);
 

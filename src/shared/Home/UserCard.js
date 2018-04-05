@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import cx from 'classnames';
 
 import { Selectors } from './redux';
@@ -8,8 +9,8 @@ import Check from '../components/Check';
 import styles from './UserCard.css';
 
 
-const UserCard = ({ onChecked, data, checked }) => (
-    <div className={cx(styles.container, { [styles.checked]: checked })}>
+const UserCard = ({ onChecked, onClick, data, checked }) => (
+    <Link to={`/user/${data.id}`} className={cx(styles.container, { [styles.checked]: checked })}>
         <div className={styles.iconContainer}>
             {/* <Check
                 checked={checked}
@@ -24,13 +25,14 @@ const UserCard = ({ onChecked, data, checked }) => (
             <div>{data.lastName}</div>
             <div>{data.email}</div>
         </div>
-    </div>
+    </Link>
 );
 
 UserCard.defaultProps = {
     data: {},
     checked: false,
     onChecked: f => f,
+    onClick: f => f,
 };
 
 UserCard.propTypes = {
@@ -40,6 +42,7 @@ UserCard.propTypes = {
     ]),
     checked: PropTypes.bool,
     onChecked: PropTypes.func,
+    onClick: PropTypes.func,
 };
 
 const mapStateToProps = (state, ownProps) => ({
