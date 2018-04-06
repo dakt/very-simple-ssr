@@ -1,51 +1,40 @@
 import express from 'express';
-import faker from 'faker';
 
+import db from './db';
 
-function generateFakeData(count) {
-    const data = [];
-
-    for (let i = 0; i < count; i += 1) {
-        data.push({
-            id: i.toString(),
-            firstName: faker.name.firstName(),
-            lastName: faker.name.lastName(),
-            email: faker.internet.email(),
-            avatar: faker.image.avatar(),
-            country: faker.address.country(),
-            city: faker.address.city(),
-            memberSince: faker.date.past(),
-            aboutMe: faker.lorem.paragraph(),
-        });
-    }
-
-    return data;
-}
-
-let FAKE_DATA = generateFakeData(200);
 
 const getOne = async (req, res) => {
-    const { id } = req.params;
-    const responseData = FAKE_DATA.find(data => data.id === id);
+    try {
+        const { id } = req.params;
+        const responseData = db.user.getOne(id);
 
-    if (responseData) {
+        if (responseData) {
+            res
+                .status(200)
+                .send({
+                    message: 'OK',
+                    data: responseData,
+                });
+        } else {
+            res.status(404);
+        }
+    } catch (error) {
         res
-            .status(200)
+            .status(500)
             .send({
-                message: 'OK',
-                data: responseData,
+                message: 'SERVER_ERROR',
+                error: error.toString(),
             });
-    } else {
-        res.status(404);
     }
 };
 
 const getMany = async (req, res) => {
     try {
         const { page, limit } = req.query;
-        const responseData = FAKE_DATA.slice((page - 1) * limit, page * limit);
+        const responseData = db.user.getMany(page, limit);
+        const totalCount = db.user.getTotal();
 
-        res.setHeader('x-total-count', FAKE_DATA.length);
+        res.setHeader('x-total-count', totalCount);
         res.setHeader('x-page', page);
         res.setHeader('x-limit', limit);
 
@@ -60,6 +49,7 @@ const getMany = async (req, res) => {
             .status(500)
             .send({
                 message: 'SERVER_ERROR',
+                error: error.toString(),
             });
     }
 };
@@ -67,7 +57,7 @@ const getMany = async (req, res) => {
 const deleteOne = async (req, res) => {
     try {
         const { id } = req.params;
-        FAKE_DATA = FAKE_DATA.filter(data => data.id !== id);
+        db.deleteOne(id);
 
         res
             .status(200)
@@ -80,6 +70,7 @@ const deleteOne = async (req, res) => {
             .status(500)
             .send({
                 message: 'SERVER_ERROR',
+                error: error.toString(),
             });
     }
 };
