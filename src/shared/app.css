@@ -9,7 +9,11 @@ html, body {
 
 .navigationBar {
     background: steelblue;
-    padding: 25px 30px;
+    padding: 15px 15px;
+}
+
+.navigationBar i {
+    font-size: 3.0em;
 }
 
 .navigationBar a {
