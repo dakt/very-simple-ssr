@@ -3,28 +3,33 @@ import express from 'express';
 import db from './db';
 
 
+const dataResponse = (response, data, message = 'OK') => {
+    response
+        .status(200)
+        .send({ message, data });
+};
+
+const errorResponse = (response, error) => {
+    response
+        .status(500)
+        .send({
+            message: 'SERVER_ERROR',
+            error: error && error.toString(),
+        });
+};
+
 const getOne = async (req, res) => {
     try {
         const { id } = req.params;
         const responseData = db.user.getOne(id);
 
         if (responseData) {
-            res
-                .status(200)
-                .send({
-                    message: 'OK',
-                    data: responseData,
-                });
+            dataResponse(res, responseData);
         } else {
             res.status(404);
         }
     } catch (error) {
-        res
-            .status(500)
-            .send({
-                message: 'SERVER_ERROR',
-                error: error.toString(),
-            });
+        errorResponse(res, error);
     }
 };
 
@@ -38,46 +43,30 @@ const getMany = async (req, res) => {
         res.setHeader('x-page', page);
         res.setHeader('x-limit', limit);
 
-        res
-            .status(200)
-            .send({
-                message: 'OK',
-                data: responseData,
-            });
+        dataResponse(res, responseData);
     } catch (error) {
-        res
-            .status(500)
-            .send({
-                message: 'SERVER_ERROR',
-                error: error.toString(),
-            });
+        errorResponse(res, error);
     }
 };
 
 const deleteOne = async (req, res) => {
     try {
         const { id } = req.params;
-        db.deleteOne(id);
-
-        res
-            .status(200)
-            .send({
-                data: id,
-                message: 'RESOURCE_DELETED',
-            });
+        db.user.deleteOne(id);
+        dataResponse(res, null, 'RESOURCE_DELETED');
     } catch (error) {
-        res
-            .status(500)
-            .send({
-                message: 'SERVER_ERROR',
-                error: error.toString(),
-            });
+        errorResponse(res, error);
     }
 };
 
 const router = express.Router();
-router.get('/api/users/:id', getOne);
-router.get('/api/users', getMany);
-router.delete('/api/users/:id', deleteOne);
+
+router.route('/api/users')
+    .get(getMany);
+
+router.route('/api/users/:id')
+    .get(getOne)
+    .delete(deleteOne);
+
 
 export default router;

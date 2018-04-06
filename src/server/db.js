@@ -23,17 +23,17 @@ function generateFakeData(count) {
 
 let FAKE_DATA = generateFakeData(200);
 
-const getOne = (id) => {
-    return FAKE_DATA.find(data => data.id === id);
-};
+const getOne = id => (
+    FAKE_DATA.find(data => data.id === id)
+);
 
-const getMany = (page, limit) => {
-    return FAKE_DATA.slice((page - 1) * limit, page * limit);
-};
+const getMany = (page, limit) => (
+    FAKE_DATA.slice((page - 1) * limit, page * limit)
+);
 
-const getTotal = () => {
-    return FAKE_DATA.length;
-};
+const getTotal = () => (
+    FAKE_DATA.length
+);
 
 const deleteOne = (id) => {
     FAKE_DATA = FAKE_DATA.filter(data => data.id !== id);

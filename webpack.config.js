@@ -60,7 +60,7 @@ const client = {
 const server = {
     mode: 'development',
     target: 'node',
-    entry: ['./src/server/server.js'],
+    entry: ['./src/server/index.js'],
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'server.js',
