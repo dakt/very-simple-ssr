@@ -1,8 +1,11 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 
-import styles from './app.css';
-import './global.css';
+
+import Icon from '../components/Icon';
+import ActionBar from './ActionBar';
+import styles from './App.css';
+import '../global.css';
 
 
 export default withRouter(({ children, location }) => (
@@ -11,10 +14,14 @@ export default withRouter(({ children, location }) => (
             <div className={styles.navigationBar}>
                 <Link to="/">
                     { location.pathname === '/' 
-                        ? (<i className="material-icons">menu</i>)
-                        : (<i className="material-icons">keyboard_arrow_left</i>)
+                        ? (<Icon name="menu" />)
+                        : (<Icon name="keyboard_arrow_left" />)
                     }
                 </Link>
+
+                <div className={styles.navRight}>
+                    <ActionBar />
+                </div>
             </div>
             <div className={styles.body}>
                 { children }

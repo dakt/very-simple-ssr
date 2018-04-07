@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const MemoryFS = require('memory-fs');
 const path = require('path');
 const Module = require('module');
+const os = require('os');
 const config = require('./webpack.config');
 
 const [clientConfig, serverConfig] = config;
@@ -11,11 +12,20 @@ const serverCompiler = webpack(serverConfig);
 const fs = new MemoryFS();
 let server = null;
 
+function printErrors(stats) {
+    const statsJson = stats.toJson();
+
+    statsJson.errors.forEach(error => {
+        console.error(error.replace('\n', os.EOL));
+    });
+}
+
 clientCompiler.watch({
     ignored: /node_modules/,
 }, (err, stats) => {
 
     if (stats.hasErrors()) {
+        printErrors(stats);
         console.log('COMPILATIONS ERRORS');
         return;
     }
@@ -30,6 +40,7 @@ serverCompiler.watch({
 }, (err, stats) => {
 
     if (stats.hasErrors()) {
+        printErrors(stats);
         console.log('COMPILATIONS ERRORS');
         return;
     }

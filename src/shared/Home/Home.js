@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import List from '../components/List';
 import UserCard from './UserCard';
 import { Actions, Selectors } from './redux';
+import { Actions as AppActions, Selectors as AppSelectors } from '../App/redux';
 import styles from './Home.css';
 
 
@@ -11,10 +12,6 @@ export class GistList extends React.Component {
 
     static getInitialData({ isServer, dispatch, getState }) {
         return dispatch(Actions.loadMore());
-    }
-
-    handleClick() {
-        console.log('View item');
     }
 
     handleChecked(event, data) {
@@ -28,13 +25,18 @@ export class GistList extends React.Component {
     connectAndRenderUserCard(data) {
         const mapStateToProps = (state, ownProps) => ({
             checked: Selectors.isChecked(state, ownProps.data.id),
+            checkboxVisible: AppSelectors.avtionsVisible(state),
         });
 
-        return React.createElement(connect(mapStateToProps)(UserCard), {
-            data,
-            onClik: f => f,
-            onChecked: f => f,
+        const mapDispatchToProps = dispatch => ({
+            onAvatarClicked: () => dispatch(AppActions.toggleActions()),
+            onChecked: (e, data) => dispatch(Actions.entityCheck(data.id)),
         });
+
+        return React.createElement(
+            connect(mapStateToProps, mapDispatchToProps)(UserCard), 
+            { data }
+        );
     }
 
     render() {

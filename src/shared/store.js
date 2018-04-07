@@ -5,6 +5,7 @@ import qs from 'query-string';
 
 import entitiesReducer from './Home/redux';
 import userReducer from './User/redux';
+import appReducer from './App/redux';
 
 function findRoute(routes, path) {
     return routes.reduce((acc, route) => {
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
     route: routeReducer,
     entities: entitiesReducer,
     user: userReducer,
+    app: appReducer,
 });
 
 function isClient() {

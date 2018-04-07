@@ -4,28 +4,34 @@ import { Link } from 'react-router-dom';
 import cx from 'classnames';
 
 import Check from '../components/Check';
+import Icon from '../components/Icon';
 import styles from './UserCard.css';
 
 
-const UserCard = ({ onChecked, onClick, data, checked }) => (
-    <Link to={`/user/${data.id}`} className={cx(styles.container, { [styles.checked]: checked })} draggable="false">
+const UserCard = ({ onChecked, onAvatarClicked, data, checkboxVisible, checked }) => (
+    <div to={`/user/${data.id}`} className={cx(styles.container, { [styles.checked]: checked })} draggable="false">
         <div className={styles.iconContainer}>
-            {/* <Check
-                checked={checked}
-                onClick={e => onChecked(e, data)}
-            /> */}
-            <div className={styles.avatar}>
+            { checkboxVisible ? (
+                    <Check
+                        checked={checked}
+                        onClick={e => onChecked(e, data)}
+                    />
+                ) : (
+                    null
+                )
+            }
+            <div className={styles.avatar} onClick={onAvatarClicked}>
                 <img src={data.avatar} alt="avatar" />
             </div>
         </div>
         <div className={styles.body}>
             <div className={styles.name}>{data.firstName} {data.lastName}</div>
             <div className={styles.email}>
-                <i className="material-icons">mail_outline</i>
+                <Icon name="mail_outline" />
                 <span>{data.email}</span>
             </div>
         </div>
-    </Link>
+    </div>
 );
 
 UserCard.defaultProps = {

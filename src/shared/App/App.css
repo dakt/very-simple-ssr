@@ -8,12 +8,14 @@ html, body {
 }
 
 .navigationBar {
+    flex-direction: row;
     background: steelblue;
     padding: 15px 15px;
 }
 
 .navigationBar i {
     font-size: 3.0em;
+    color: #fff;
 }
 
 .navigationBar a {
@@ -21,6 +23,10 @@ html, body {
     margin-right: 10px;
     color: white;
     text-decoration: none;
+}
+
+.navRight {
+    float: right;
 }
 
 .body {
