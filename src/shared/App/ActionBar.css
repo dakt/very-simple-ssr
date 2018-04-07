@@ -1,0 +1,32 @@
+:global(.actionBar) {
+    transform: scale(0);
+}
+
+:global(.actionBar-enter) {
+    transform: scale(0);
+}
+
+:global(.actionBar-enter-active) {
+    transform: scale(1.2);
+    transition: transform 200ms; /* <--- HERE */
+}
+
+:global(.actionBar-enter-done) {
+    transform: scale(1);
+    transition: transform 200ms;
+}
+
+:global(.actionBar-exit) {
+    opacity: 1;
+    transform: scale(1);
+}
+
+:global(.actionBar-exit-active) {
+    transform: scale(1.2);
+    transition: transform 200ms;
+}
+
+:global(.actionBar-exit-done) {
+    transform: scale(0);
+    transition: transform 200ms;
+}
