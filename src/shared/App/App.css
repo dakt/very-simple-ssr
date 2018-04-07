@@ -8,7 +8,9 @@ html, body {
 }
 
 .navigationBar {
+    display: flex;
     flex-direction: row;
+    justify-content: space-between;
     background: steelblue;
     padding: 15px 15px;
 }
@@ -23,10 +25,6 @@ html, body {
     margin-right: 10px;
     color: white;
     text-decoration: none;
-}
-
-.navRight {
-    float: right;
 }
 
 .body {

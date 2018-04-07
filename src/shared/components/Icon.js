@@ -1,6 +1,7 @@
 import React from 'react';
+import cx from 'classnames';
 
 
 export default (props) => (
-    <i className="material-icons" {...props}>{props.name}</i>
+    <i {...props} className={cx("material-icons", props.className)}>{props.name}</i>
 );

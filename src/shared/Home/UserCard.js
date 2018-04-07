@@ -9,20 +9,23 @@ import styles from './UserCard.css';
 
 
 const UserCard = ({ onChecked, onAvatarClicked, data, checkboxVisible, checked }) => (
-    <div to={`/user/${data.id}`} className={cx(styles.container, { [styles.checked]: checked })} draggable="false">
+    <Link
+        to={`/user/${data.id}`}
+        className={cx(styles.container, { [styles.checked]: checked })}
+        draggable="false"
+    >
         <div className={styles.iconContainer}>
             { checkboxVisible ? (
                     <Check
                         checked={checked}
-                        onClick={e => onChecked(e, data)}
+                        onClick={e => { e.preventDefault(); onChecked(e, data); }}
                     />
                 ) : (
-                    null
+                    <div className={styles.avatar} onClick={(e) => { e.preventDefault(); onAvatarClicked(); }}>
+                        <img src={data.avatar} alt="avatar" />
+                    </div>
                 )
             }
-            <div className={styles.avatar} onClick={onAvatarClicked}>
-                <img src={data.avatar} alt="avatar" />
-            </div>
         </div>
         <div className={styles.body}>
             <div className={styles.name}>{data.firstName} {data.lastName}</div>
@@ -31,7 +34,7 @@ const UserCard = ({ onChecked, onAvatarClicked, data, checkboxVisible, checked }
                 <span>{data.email}</span>
             </div>
         </div>
-    </div>
+    </Link>
 );
 
 UserCard.defaultProps = {

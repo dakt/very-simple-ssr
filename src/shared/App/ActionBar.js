@@ -10,10 +10,12 @@ import './ActionBar.css';
 
 const ActionBar = ({ visible }) => (
     <div>
-        <CSSTransition in={visible} classNames="actionBar" timeout={{ enter: 200, exit: 200 }}>
-            <div className="actionBar">
-                <Icon name="delete" onClick={() => alert('!')} />
-            </div>
+        <CSSTransition
+            in={visible}
+            classNames="actionBar"
+            timeout={{ enter: 200, exit: 200 }}
+        >
+            <Icon className="actionBar" name="delete" onClick={() => alert('!')} />
         </CSSTransition>
     </div>
 );
