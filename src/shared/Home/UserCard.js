@@ -34,25 +34,19 @@ class UserCard extends React.Component {
     }
 
     render() {
-        const {
-            data,
-            checked,
-            showCheckbox,
-            onCheckClick,
-            onAvatarClick,
-        } = this.props;
+        const { data, isChecked, showCheckbox, } = this.props;
 
         return (
             <Link
                 to={`/user/${data.id}`}
                 onClick={event => this.handleClick(event, data)}
-                className={cx(styles.container, { [styles.checked]: checked })}
+                className={cx(styles.container, { [styles.checked]: isChecked })}
                 draggable="false"
             >
                 <div className={styles.iconContainer}>
                     { showCheckbox ? (
                             <Check
-                                checked={checked}
+                                checked={isChecked}
                                 onClick={e => this.handleCheckboxClick(e, data)}
                             />
                         ) : (
@@ -76,7 +70,7 @@ class UserCard extends React.Component {
 
 UserCard.defaultProps = {
     data: {},
-    checked: false,
+    isChecked: false,
     onCheckClick: f => f,
     onClick: f => f,
 };
@@ -86,13 +80,13 @@ UserCard.propTypes = {
         PropTypes.object,
         PropTypes.any,
     ]),
-    checked: PropTypes.bool,
+    isChecked: PropTypes.bool,
     onClick: PropTypes.func,
     onCheckClick: PropTypes.func,
 };
 
 const mapStateToProps = (state, ownProps) => ({
-    checked: ListSelectors.isChecked(state, ownProps.data.id),
+    isChecked: ListSelectors.isChecked(state, ownProps.data.id),
     showCheckbox: NavbarSelectors.avtionsVisible(state),
 });
 
@@ -101,4 +95,7 @@ const mapDispatchToProps = dispatch => ({
     onCheckClick: data => dispatch(ListActions.entityCheck(data.id)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserCard);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(UserCard);

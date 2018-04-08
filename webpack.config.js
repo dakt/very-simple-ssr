@@ -29,7 +29,7 @@ const modulesRules = [
         exclude: /node_modules/,
         use: ExtractTextPlugin.extract({
             fallback: 'style-loader',
-            use: 'css-loader?modules&localIdentName=[hash:base64:5]_[local]',
+            use: 'css-loader?modules&localIdentName=[name]-[local]_[hash:base64:3]',
         }),
     },
 ];

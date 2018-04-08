@@ -6,9 +6,9 @@ import { Actions, Selectors } from './redux';
 import Icon from '../../components/Icon';
 
 
-const Burger = ({ visible, location, onBackClicked }) => (
+const Burger = ({ visible, location, onBackClick }) => (
     visible ? (
-        <Icon name="keyboard_arrow_left" onClick={() => onBackClicked()} />
+        <Icon name="keyboard_arrow_left" onClick={() => onBackClick()} />
     ) : (
         <Link to="/">
         { location.pathname === '/' 
@@ -24,7 +24,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    onBackClicked: () => dispatch(Actions.toggleActions()),
+    onBackClick: () => dispatch(Actions.toggleActions()),
 });
 
 export default connect(
