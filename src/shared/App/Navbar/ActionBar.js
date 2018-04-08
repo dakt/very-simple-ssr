@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { CSSTransition } from 'react-transition-group';
 
-import Icon from '../components/Icon';
+import Icon from '../../components/Icon';
 import { Selectors } from './redux';
 
 import './ActionBar.css';

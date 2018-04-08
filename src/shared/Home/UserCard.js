@@ -1,46 +1,83 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import cx from 'classnames';
 
+import { Actions as ListActions, Selectors as ListSelectors } from './redux';
+import { Actions as NavbarActions, Selectors as NavbarSelectors } from '../App/Navbar/redux';
 import Check from '../components/Check';
 import Icon from '../components/Icon';
 import styles from './UserCard.css';
 
 
-const UserCard = ({ onChecked, onAvatarClicked, data, checkboxVisible, checked }) => (
-    <Link
-        to={`/user/${data.id}`}
-        className={cx(styles.container, { [styles.checked]: checked })}
-        draggable="false"
-    >
-        <div className={styles.iconContainer}>
-            { checkboxVisible ? (
-                    <Check
-                        checked={checked}
-                        onClick={e => { e.preventDefault(); onChecked(e, data); }}
-                    />
-                ) : (
-                    <div className={styles.avatar} onClick={(e) => { e.preventDefault(); onAvatarClicked(); }}>
-                        <img src={data.avatar} alt="avatar" />
+class UserCard extends React.Component {
+
+    handleAvatarClick(event, data) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.props.onAvatarClick(); 
+        this.props.onCheckClick(data);
+    }
+
+    handleCheckboxClick(event, data) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.props.onCheckClick(data);
+    }
+
+    handleClick(event, data) {
+        if (this.props.showCheckbox) {
+            event.preventDefault();
+            this.props.onCheckClick(data);
+        }
+    }
+
+    render() {
+        const {
+            data,
+            checked,
+            showCheckbox,
+            onCheckClick,
+            onAvatarClick,
+        } = this.props;
+
+        return (
+            <Link
+                to={`/user/${data.id}`}
+                onClick={event => this.handleClick(event, data)}
+                className={cx(styles.container, { [styles.checked]: checked })}
+                draggable="false"
+            >
+                <div className={styles.iconContainer}>
+                    { showCheckbox ? (
+                            <Check
+                                checked={checked}
+                                onClick={e => this.handleCheckboxClick(e, data)}
+                            />
+                        ) : (
+                            <div className={styles.avatar} onClick={(e) => this.handleAvatarClick(e, data)}>
+                                <img src={data.avatar} alt="avatar" />
+                            </div>
+                        )
+                    }
+                </div>
+                <div className={styles.body}>
+                    <div className={styles.name}>{data.firstName} {data.lastName}</div>
+                    <div className={styles.email}>
+                        <Icon name="mail_outline" />
+                        <span>{data.email}</span>
                     </div>
-                )
-            }
-        </div>
-        <div className={styles.body}>
-            <div className={styles.name}>{data.firstName} {data.lastName}</div>
-            <div className={styles.email}>
-                <Icon name="mail_outline" />
-                <span>{data.email}</span>
-            </div>
-        </div>
-    </Link>
-);
+                </div>
+            </Link>
+        );
+    }
+}
 
 UserCard.defaultProps = {
     data: {},
     checked: false,
-    onChecked: f => f,
+    onCheckClick: f => f,
     onClick: f => f,
 };
 
@@ -50,8 +87,18 @@ UserCard.propTypes = {
         PropTypes.any,
     ]),
     checked: PropTypes.bool,
-    onChecked: PropTypes.func,
     onClick: PropTypes.func,
+    onCheckClick: PropTypes.func,
 };
 
-export default UserCard;
+const mapStateToProps = (state, ownProps) => ({
+    checked: ListSelectors.isChecked(state, ownProps.data.id),
+    showCheckbox: NavbarSelectors.avtionsVisible(state),
+});
+
+const mapDispatchToProps = dispatch => ({
+    onAvatarClick: () => dispatch(NavbarActions.toggleActions()),
+    onCheckClick: data => dispatch(ListActions.entityCheck(data.id)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserCard);

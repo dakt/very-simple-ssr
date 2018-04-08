@@ -5,7 +5,7 @@ import qs from 'query-string';
 
 import entitiesReducer from './Home/redux';
 import userReducer from './User/redux';
-import appReducer from './App/redux';
+import appReducer from './App/Navbar/redux';
 
 function findRoute(routes, path) {
     return routes.reduce((acc, route) => {

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { Actions, Selectors } from './redux';
-import Icon from '../components/Icon';
+import Icon from '../../components/Icon';
 
 
 const Burger = ({ visible, location, onBackClicked }) => (
