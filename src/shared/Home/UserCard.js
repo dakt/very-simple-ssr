@@ -87,7 +87,7 @@ UserCard.propTypes = {
 
 const mapStateToProps = (state, ownProps) => ({
     isChecked: ListSelectors.isChecked(state, ownProps.data.id),
-    showCheckbox: NavbarSelectors.avtionsVisible(state),
+    showCheckbox: NavbarSelectors.actionsVisible(state),
 });
 
 const mapDispatchToProps = dispatch => ({

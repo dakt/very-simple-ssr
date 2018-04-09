@@ -30,7 +30,7 @@ const rootReducer = combineReducers({
 /* *************** Selectors *************** */
 
 const Selectors = {
-    avtionsVisible: state => state.app.navbar.actionsVisible,
+    actionsVisible: state => state.app.navbar.actionsVisible,
 };
 
 export default rootReducer;

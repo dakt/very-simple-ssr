@@ -20,7 +20,7 @@ const Burger = ({ visible, location, onBackClick }) => (
 );
 
 const mapStateToProps = state => ({
-    visible: Selectors.avtionsVisible(state),
+    visible: Selectors.actionsVisible(state),
 });
 
 const mapDispatchToProps = dispatch => ({

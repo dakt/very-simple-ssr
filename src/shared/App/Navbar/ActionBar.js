@@ -21,7 +21,7 @@ const ActionBar = ({ visible }) => (
 );
 
 const mapStateToProps = state => ({
-    visible: Selectors.avtionsVisible(state),
+    visible: Selectors.actionsVisible(state),
 });
 
 export default connect(mapStateToProps)(ActionBar);
