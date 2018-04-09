@@ -1,8 +1,9 @@
 const path = require('path');
-const process =require('process');
+const process = require('process');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -15,6 +16,7 @@ const clientPlugins = sharedPlugins.concat(isProduction ? [
     new UglifyJsPlugin({
         parallel: true,
     }),
+    new BundleAnalyzerPlugin(),
 ] : []);
 const serverPlugins = sharedPlugins;
 
