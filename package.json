@@ -51,7 +51,7 @@
     "clean": "rimraf dist",
     "start": "node start.js",
     "start:prod": "npm run build && node prod",
-    "build": "cross-env NODE_ENV='production' npm run clean && webpack --colors --display errors-only --progress",
+    "build": "npm run clean && cross-env NODE_ENV='production' webpack --colors --display errors-only --progress",
     "lint": "eslint ./src"
   }
 }
