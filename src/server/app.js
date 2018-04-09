@@ -27,7 +27,7 @@ function renderToHTML(Element, initialProps) {
         <link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet">
         <link rel="stylesheet" href="/styles.css">
 
-        <script defer type="text/javascript" src="/vendors~bundle.js"></script>
+        <script defer type="text/javascript" src="/lib-bundle.js"></script>
         <script defer type="text/javascript" src="/bundle.js"></script>
     </head>
     <body>

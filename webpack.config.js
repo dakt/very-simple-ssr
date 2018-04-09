@@ -51,9 +51,18 @@ const client = {
     module: {
         rules: modulesRules,
     },
+    // Webpack 4 doesn't use commonChunksPlugin anymore:
+    // https://gist.github.com/sokra/1522d586b8e5c0f5072d7565c2bee693
     optimization: {
         splitChunks: {
-            chunks: 'all',
+            cacheGroups: {
+                lib: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: 'lib',
+                    chunks: 'all',
+                    filename: '[name]-bundle.js',
+                },
+            },
         },
     },
     plugins: clientPlugins,
