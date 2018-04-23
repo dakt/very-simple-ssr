@@ -21,10 +21,10 @@ const errorResponse = (response, error) => {
 const getOne = async (req, res) => {
     try {
         const { id } = req.params;
-        const responseData = db.user.getOne(id);
+        const data = db.user.getOne(id);
 
-        if (responseData) {
-            dataResponse(res, responseData);
+        if (data) {
+            dataResponse(res, data);
         } else {
             res.status(404);
         }
@@ -36,14 +36,14 @@ const getOne = async (req, res) => {
 const getMany = async (req, res) => {
     try {
         const { page, limit } = req.query;
-        const responseData = db.user.getMany(page, limit);
+        const data = db.user.getMany(page, limit);
         const totalCount = db.user.getTotal();
 
         res.setHeader('x-total-count', totalCount);
         res.setHeader('x-page', page);
         res.setHeader('x-limit', limit);
 
-        dataResponse(res, responseData);
+        dataResponse(res, data);
     } catch (error) {
         errorResponse(res, error);
     }

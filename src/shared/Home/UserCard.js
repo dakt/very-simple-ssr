@@ -72,7 +72,6 @@ UserCard.defaultProps = {
     data: {},
     isChecked: false,
     onCheckClick: f => f,
-    onClick: f => f,
 };
 
 UserCard.propTypes = {
@@ -81,7 +80,6 @@ UserCard.propTypes = {
         PropTypes.any,
     ]),
     isChecked: PropTypes.bool,
-    onClick: PropTypes.func,
     onCheckClick: PropTypes.func,
 };
 
@@ -97,5 +95,5 @@ const mapDispatchToProps = dispatch => ({
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(UserCard);

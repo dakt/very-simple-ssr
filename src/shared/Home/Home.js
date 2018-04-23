@@ -29,13 +29,11 @@ export class GistList extends React.Component {
                     data={this.props.data}
                     loading={this.props.loading}
                     onRemove={data => this.handleRemoveItem(data)}
-                    onNearEnd={_ => this.props.loadMore()}
+                    onNearEnd={() => this.props.loadMore()}
                 >
                     {
                         data => (
-                            <UserCard
-                                data={data}
-                            />
+                            <UserCard data={data} />
                         )
                     }
                 </List>
